@@ -1,0 +1,25 @@
+import Login from "../screens/login";
+import Signup from "../screens/signup";
+import { createStackNavigator } from "react-navigation-stack";
+import { createAppContainer } from "react-navigation";
+
+const screens = {
+  Login: {
+    screen: Login,
+    navigationOptions: {
+      title: "Login"
+    }
+  },
+  Signup: {
+    screen: Signup
+  }
+};
+const homeStack = createStackNavigator(screens, {
+  defaultNavigationOptions: {
+    headerTintColor: "white",
+    headerStyle: {
+      backgroundColor: "#16A2DA"
+    }
+  }
+});
+export default createAppContainer(homeStack);
