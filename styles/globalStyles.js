@@ -1,34 +1,37 @@
 import { StyleSheet } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
 
 export const globalStyles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20
+    flex: 1
   },
   logoText: {
     fontFamily: "nunitoBold",
-    fontSize: 40,
+    fontSize: hp("5%"),
     color: "#333",
     textAlign: "center",
-    marginTop: 20,
-    marginBottom: 80
+    marginTop: hp("3%"),
+    marginBottom: hp("0.1%")
   },
   outlineText: {
-    marginTop: 10,
-    marginLeft: 20,
+    marginTop: hp("2%"),
+    marginLeft: wp("5%"),
     fontFamily: "nunitoRegular",
-    fontSize: 20
+    fontSize: hp("3%")
   },
   textInput: {
-    marginTop: 10,
-    borderWidth: 1,
+    marginTop: hp("2%"),
+    borderWidth: hp("0%"),
     borderStyle: "solid",
     borderRadius: 50,
     borderColor: "#eee",
-    padding: 20
+    padding: wp("7%")
   },
   icon: {
-    marginTop: 5,
+    marginTop: hp("1%"),
     alignItems: "center",
     justifyContent: "center"
   },
@@ -37,8 +40,8 @@ export const globalStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 50,
-    padding: 20,
-    marginTop: 50,
-    width: "60%"
+    padding: hp("2%"),
+    width: wp("60%"),
+    marginTop: hp("5%")
   }
 });
