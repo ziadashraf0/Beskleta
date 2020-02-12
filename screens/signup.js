@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,10 +12,86 @@ import {
 } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import { FontAwesome } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
 import DatePicker from "react-native-datepicker";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { clientRegister } from "../services/clientServices";
+export function validateEmail(state) {
+  var regex = /\S+@\S+\.\S+/;
+  var regexname = /\S+/;
 
-export default function Login() {
+  if (
+    regex.test(state.email) == 0 ||
+    regexname.test(state.firstName) == 0 ||
+    regexname.test(state.birthDate) == 0 ||
+    regexname.test(state.lastName) == 0 ||
+    regexname.test(state.phoneNumber) == 0 ||
+    regexname.test(state.password) == 0 ||
+    regexname.test(state.SSN) == 0
+  ) {
+    alert("validation error");
+    return false;
+  } else if (state.password != state.confirmPassword) {
+    alert("passwords don't match");
+    return false;
+  }
+  return true;
+}
+export async function onClick(state) {
+  reqBody = {
+    firstName: "",
+    lastName: "",
+    password: " ",
+    email: "",
+    SSN: "",
+    phoneNumber: "",
+    birthDate: ""
+  };
+  if (validateEmail(state)) {
+    reqBody.firstName = state.firstName;
+    reqBody.lastName = state.lastName;
+    reqBody.phoneNumber = state.phoneNumber;
+    reqBody.email = state.email;
+    reqBody.password = state.password;
+    reqBody.SSN = state.SSN;
+    reqBody.birthDate = state.birthDate;
+    console.log(reqBody);
+    try {
+      await clientRegister(reqBody);
+      alert("Registerd!");
+    } catch (error) {
+      if (error.response.status === 400) {
+        alert("already exists");
+      }
+    }
+  }
+}
+
+export default function Signup() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
+  const [SSN, setSSN] = useState("");
+  const [date, setDate] = useState("");
+  const [showDate, setShowDate] = useState(false);
+  const [dateobject, setDateObject] = useState("");
+
+  const state = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    SSN: "",
+    phoneNumber: "",
+    birthDate: ""
+  };
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -32,37 +108,110 @@ export default function Login() {
             ></FontAwesome>
           </View>
           <Text style={globalStyles.logoText}>Beskleta</Text>
-          <Text style={globalStyles.outlineText}>username</Text>
+          <Text style={globalStyles.outlineText}>First Name</Text>
           <TextInput
             style={globalStyles.textInput}
             placeholder="enter your username"
+            id="userName"
+            onChangeText={firstName => setFirstName(firstName)}
+            required
+          ></TextInput>
+          <Text style={globalStyles.outlineText}>Last name</Text>
+          <TextInput
+            style={globalStyles.textInput}
+            placeholder="enter your username"
+            id="userName"
+            onChangeText={lastName => setLastName(lastName)}
+            required
           ></TextInput>
           <Text style={globalStyles.outlineText}>email</Text>
           <TextInput
             style={globalStyles.textInput}
             placeholder="enter your email"
+            onChangeText={email => setEmail(email)}
+          ></TextInput>
+          <Text style={globalStyles.outlineText}>SSN</Text>
+          <TextInput
+            keyboardType="numeric"
+            style={globalStyles.textInput}
+            placeholder="enter your SSN"
+            onChangeText={SSN => setSSN(SSN)}
+          ></TextInput>
+          <Text style={globalStyles.outlineText}>Phone Number</Text>
+          <TextInput
+            keyboardType="numeric"
+            style={globalStyles.textInput}
+            placeholder="enter your SSN"
+            onChangeText={phoneNumber => setPhoneNumber(phoneNumber)}
           ></TextInput>
           <Text style={globalStyles.outlineText}>Password</Text>
           <TextInput
             secureTextEntry={true}
             style={globalStyles.textInput}
             placeholder="enter your Password"
+            onChangeText={password => setPassword(password)}
           ></TextInput>
           <Text style={globalStyles.outlineText}>Confirm password</Text>
           <TextInput
             secureTextEntry={true}
             style={globalStyles.textInput}
             placeholder="confirm your Password"
+            onChangeText={confirmPassword =>
+              setconfirmPassword(confirmPassword)
+            }
           ></TextInput>
           <Text style={globalStyles.outlineText}>BirthDate</Text>
 
-          <DatePicker
+          <TouchableOpacity
+            style={{ marginBottom: 10, flexDirection: "row" }}
+            onPress={() => setShowDate(true)}
+          >
+            <View style={{ marginTop: 10, marginLeft: 20 }}>
+              <MaterialIcons name="date-range" color="#16A2DA" size={40} />
+            </View>
+            <View
+              style={{
+                height: 30,
+                width: 150,
+                borderRadius: 10,
+                borderColor: "grey",
+                borderWidth: 1,
+                marginLeft: 10,
+                marginTop: 15
+              }}
+            >
+              <Text
+                style={{ color: "#777", fontSize: 15, textAlign: "center" }}
+              >
+                Select Date
+              </Text>
+            </View>
+          </TouchableOpacity>
+          {showDate && (
+            <DateTimePicker
+              value={new Date()}
+              mode={date}
+              is24Hour={true}
+              display="default"
+              onChange={date => {
+                setShowDate(false);
+                setDate(date);
+                setDateObject(date.nativeEvent);
+              }}
+            />
+          )}
+
+          {/* <DatePicker
+            style={{ width: 200, marginLeft: 20, marginTop: 15 }}
+            mode="datetime"
+            placeholder="select date"  <DatePicker
             style={{ width: 200, marginLeft: 20, marginTop: 15 }}
             mode="datetime"
             placeholder="select date"
             format="YYYY-MM-DD"
             minDate="2002-05-01"
-            maxDate={new Date().getDate()}
+            selected={state.birthDate}
+            //maxDate={new Date().getDate()}
             confirmBtnText="Confirm"
             cancelBtnText="Cancel"
             customStyles={{
@@ -76,10 +225,45 @@ export default function Login() {
                 marginLeft: 36
               }
             }}
+            onDateChange={date => {
+              setDate(date);
+            }}
           />
+            format="YYYY-MM-DD"
+            minDate="2002-05-01"
+            selected={state.birthDate}
+            //maxDate={new Date().getDate()}
+            confirmBtnText="Confirm"
+            cancelBtnText="Cancel"
+            customStyles={{
+              dateIcon: {
+                position: "absolute",
+                left: 0,
+                top: 4,
+                marginLeft: 0
+              },
+              dateInput: {
+                marginLeft: 36
+              }
+            }}
+            onDateChange={date => {
+              setDate(date);
+            }}
+          /> */}
           <TouchableOpacity
             style={{ alignItems: "center", justifyContent: "center" }}
-            onPress={() => {}}
+            onPress={() => {
+              const dates = new Date(dateobject.timestamp).toLocaleDateString();
+              state.firstName = firstName;
+              state.lastName = lastName;
+              state.email = email;
+              state.SSN = SSN;
+              state.password = password;
+              state.confirmPassword = confirmPassword;
+              state.phoneNumber = phoneNumber;
+              state.birthDate = dates;
+              onClick(state);
+            }}
           >
             <View style={globalStyles.button}>
               <Text style={{ color: "white", fontSize: 20 }}>Sign up</Text>

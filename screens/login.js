@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,47 +12,107 @@ import {
 } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import { FontAwesome } from "@expo/vector-icons";
+import { clientLogin } from "../services/clientServices";
+import { ScrollView } from "react-native-gesture-handler";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp
+} from "react-native-responsive-screen";
+export function validateEmail(state) {
+  var regex = /\S+@\S+\.\S+/;
+  var regexname = /\S+/;
+
+  if (regex.test(state.email) == 0 || regexname.test(state.password) == 0) {
+    alert("validation error");
+    return false;
+  }
+  console.log("good login validation");
+  return true;
+}
+export async function onClick(state) {
+  reqBody = {
+    email: "",
+    password: ""
+  };
+  if (validateEmail(state)) {
+    reqBody.email = state.email;
+    reqBody.password = state.password;
+    console.log(reqBody);
+    try {
+      await clientLogin(reqBody);
+      alert("successful login");
+    } catch (error) {
+      if (error.response.status === 404) {
+        alert("UserName or Password is Incorrect");
+      }
+    }
+  }
+}
 
 export default function Login({ navigation }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const state = {
+    email: "",
+    password: ""
+  };
   return (
     <TouchableWithoutFeedback
       onPress={() => {
         Keyboard.dismiss();
       }}
     >
-      <View style={globalStyles.container}>
-        <View style={globalStyles.icon}>
-          <FontAwesome name="bicycle" color="#16A2DA" size={100}></FontAwesome>
-        </View>
-        <Text style={globalStyles.logoText}>Beskleta</Text>
-        <Text style={globalStyles.outlineText}>username</Text>
-        <TextInput
-          style={globalStyles.textInput}
-          placeholder="enter your username"
-        ></TextInput>
-        <Text style={globalStyles.outlineText}>Password</Text>
-        <TextInput
-          secureTextEntry={true}
-          style={globalStyles.textInput}
-          placeholder="enter your Password"
-        ></TextInput>
-        <TouchableOpacity
-          style={{ alignItems: "center", justifyContent: "center" }}
-          onPress={() => {}}
-        >
-          <View style={globalStyles.button}>
-            <Text style={{ color: "white", fontSize: 20 }}>Login</Text>
+      <ScrollView>
+        <View style={globalStyles.container}>
+          <View style={globalStyles.icon}>
+            <FontAwesome
+              name="bicycle"
+              color="#16A2DA"
+              size={hp("15%")}
+            ></FontAwesome>
           </View>
-        </TouchableOpacity>
-        <View style={{ flexDirection: "row", marginTop: 80 }}>
-          <Text>you don't have an account ?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
-            <Text style={{ color: "#16A2DA", marginLeft: 5 }}>
-              Create account
-            </Text>
+          <Text style={globalStyles.logoText}>Beskleta</Text>
+          <Text style={globalStyles.outlineText}>email</Text>
+          <TextInput
+            style={globalStyles.textInput}
+            placeholder="enter your email"
+            onChangeText={email => setEmail(email)}
+          ></TextInput>
+          <Text style={globalStyles.outlineText}>Password</Text>
+          <TextInput
+            secureTextEntry={true}
+            style={globalStyles.textInput}
+            placeholder="enter your Password"
+            onChangeText={password => setPassword(password)}
+          ></TextInput>
+          <TouchableOpacity
+            style={{ alignItems: "center", justifyContent: "center" }}
+            onPress={() => {
+              state.email = email;
+              state.password = password;
+              onClick(state);
+            }}
+          >
+            <View style={globalStyles.button}>
+              <Text style={{ color: "white", fontSize: hp("3%") }}>Login</Text>
+            </View>
           </TouchableOpacity>
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: hp("4.7%"),
+              marginLeft: wp("5%")
+            }}
+          >
+            <Text>you don't have an account ?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+              <Text style={{ color: "#16A2DA", marginLeft: wp("5") }}>
+                Create account
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </TouchableWithoutFeedback>
   );
 }
