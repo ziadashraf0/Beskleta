@@ -10,16 +10,14 @@ import {
   Icon,
   TouchableOpacity
 } from "react-native";
-import { globalStyles } from "../styles/globalStyles";
+import { globalStyles } from "../../styles/globalStyles";
 import { FontAwesome } from "@expo/vector-icons";
-import { clientLogin } from "../services/clientServices";
+import { ownerLogin } from "../../services/ownerServices";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import Drawer from "../routes/drawer";
-import Home from "../screens/home";
 export function validateEmail(state) {
   var regex = /\S+@\S+\.\S+/;
   var regexname = /\S+/;
@@ -41,17 +39,18 @@ export async function onClick(state, { navigation }) {
     reqBody.password = state.password;
     console.log(reqBody);
     try {
-      await clientLogin(reqBody);
+      await ownerLogin(reqBody);
+      alert("authorized");
       navigation.navigate("Drawer");
     } catch (error) {
       if (error.response.status === 404) {
-        alert("UserName or Password is Incorrect");
+        alert("email or Password is Incorrect");
       }
     }
   }
 }
 
-export default function Login({ navigation }) {
+export default function OwnerLogin({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [auth, setAuth] = useState("");
@@ -96,7 +95,6 @@ export default function Login({ navigation }) {
               state.email = email;
               state.password = password;
               onClick(state, { navigation });
-              console.log("hhhhhhhh" + auth);
             }}
           >
             <View style={globalStyles.button}>
@@ -111,7 +109,9 @@ export default function Login({ navigation }) {
             }}
           >
             <Text>you don't have an account ?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("OwnerSignup")}
+            >
               <Text style={{ color: "#16A2DA", marginLeft: wp("5") }}>
                 Create account
               </Text>
