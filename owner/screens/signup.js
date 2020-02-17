@@ -10,15 +10,12 @@ import {
   Icon,
   TouchableOpacity
 } from "react-native";
-import { globalStyles } from "../styles/globalStyles";
+import { globalStyles } from "../../styles/globalStyles";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
-import DatePicker from "react-native-datepicker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { clientRegister } from "../services/clientServices";
-import { emailCheck } from "../services/clientServices";
-
+import { ownerRegister } from "../../services/ownerServices";
 export function validateEmail(state) {
   var regex = /\S+@\S+\.\S+/;
   var regexname = /\S+/;
@@ -40,7 +37,7 @@ export function validateEmail(state) {
   }
   return true;
 }
-export async function onClick(state, { navigation }) {
+export async function onClick(state) {
   reqBody = {
     firstName: "",
     lastName: "",
@@ -58,31 +55,19 @@ export async function onClick(state, { navigation }) {
     reqBody.password = state.password;
     reqBody.SSN = state.SSN;
     reqBody.birthDate = state.birthDate;
-    const dateee = new Date(2002, 1, 1);
     console.log(reqBody);
-    if (dateee < new Date(state.timestamp)) {
-      try {
-        await emailCheck(reqBody);
-        navigation.navigate("DependentConfirmation");
-      } catch (error) {
-        if (error.response.status == 400) {
-          alert("already exists");
-        }
-      }
-    } else {
-      try {
-        await clientRegister(reqBody);
-        alert("Registerd!");
-      } catch (error) {
-        if (error.response.status === 400) {
-          alert("already exists");
-        }
+    try {
+      await ownerRegister(reqBody);
+      alert("Registerd!");
+    } catch (error) {
+      if (error.response.status === 400) {
+        alert("already exists");
       }
     }
   }
 }
 
-export default function Signup({ navigation }) {
+export default function OwnerSignup() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -103,8 +88,7 @@ export default function Signup({ navigation }) {
     confirmPassword: "",
     SSN: "",
     phoneNumber: "",
-    birthDate: "",
-    timestamp: ""
+    birthDate: ""
   };
 
   return (
@@ -206,6 +190,7 @@ export default function Signup({ navigation }) {
             <DateTimePicker
               value={new Date()}
               mode={date}
+              maximumDate={new Date(2002, 1, 1)}
               is24Hour={true}
               display="default"
               onChange={date => {
@@ -215,56 +200,6 @@ export default function Signup({ navigation }) {
               }}
             />
           )}
-
-          {/* <DatePicker
-            style={{ width: 200, marginLeft: 20, marginTop: 15 }}
-            mode="datetime"
-            placeholder="select date"  <DatePicker
-            style={{ width: 200, marginLeft: 20, marginTop: 15 }}
-            mode="datetime"
-            placeholder="select date"
-            format="YYYY-MM-DD"
-            minDate="2002-05-01"
-            selected={state.birthDate}
-            //maxDate={new Date().getDate()}
-            confirmBtnText="Confirm"
-            cancelBtnText="Cancel"
-            customStyles={{
-              dateIcon: {
-                position: "absolute",
-                left: 0,
-                top: 4,
-                marginLeft: 0
-              },
-              dateInput: {
-                marginLeft: 36
-              }
-            }}
-            onDateChange={date => {
-              setDate(date);
-            }}
-          />
-            format="YYYY-MM-DD"
-            minDate="2002-05-01"
-            selected={state.birthDate}
-            //maxDate={new Date().getDate()}
-            confirmBtnText="Confirm"
-            cancelBtnText="Cancel"
-            customStyles={{
-              dateIcon: {
-                position: "absolute",
-                left: 0,
-                top: 4,
-                marginLeft: 0
-              },
-              dateInput: {
-                marginLeft: 36
-              }
-            }}
-            onDateChange={date => {
-              setDate(date);
-            }}
-          /> */}
           <TouchableOpacity
             style={{ alignItems: "center", justifyContent: "center" }}
             onPress={() => {
@@ -277,9 +212,7 @@ export default function Signup({ navigation }) {
               state.confirmPassword = confirmPassword;
               state.phoneNumber = phoneNumber;
               state.birthDate = dates;
-              state.timestamp = dateobject.timestamp;
-
-              onClick(state, { navigation });
+              onClick(state);
             }}
           >
             <View style={globalStyles.button}>

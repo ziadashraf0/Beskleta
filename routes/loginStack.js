@@ -1,6 +1,8 @@
 import Login from "../screens/login";
 import Signup from "../screens/signup";
 import { createStackNavigator } from "react-navigation-stack";
+import Drawer from "./drawer";
+import Home from "../screens/home";
 
 const screens = {
   Login: {
@@ -9,6 +11,7 @@ const screens = {
       title: "Login"
     }
   },
+
   Signup: {
     screen: Signup
   }
