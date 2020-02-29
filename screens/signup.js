@@ -30,6 +30,7 @@ export function validateEmail(state) {
     regexname.test(state.lastName) == 0 ||
     regexname.test(state.phoneNumber) == 0 ||
     regexname.test(state.password) == 0 ||
+    regexname.test(state.userName) == 0 ||
     regexname.test(state.SSN) == 0
   ) {
     alert("validation error");
@@ -48,7 +49,8 @@ export async function onClick(state, { navigation }) {
     email: "",
     SSN: "",
     phoneNumber: "",
-    birthDate: ""
+    birthDate: "",
+    userName: ""
   };
   if (validateEmail(state)) {
     reqBody.firstName = state.firstName;
@@ -58,6 +60,7 @@ export async function onClick(state, { navigation }) {
     reqBody.password = state.password;
     reqBody.SSN = state.SSN;
     reqBody.birthDate = state.birthDate;
+    reqBody.userName = state.userName;
     const dateee = new Date(2002, 1, 1);
     console.log(reqBody);
     if (dateee < new Date(state.timestamp)) {
@@ -84,6 +87,8 @@ export async function onClick(state, { navigation }) {
 
 export default function Signup({ navigation }) {
   const [firstName, setFirstName] = useState("");
+  const [userName, setUserName] = useState("");
+
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
@@ -104,7 +109,8 @@ export default function Signup({ navigation }) {
     SSN: "",
     phoneNumber: "",
     birthDate: "",
-    timestamp: ""
+    timestamp: "",
+    userName: ""
   };
 
   return (
@@ -123,19 +129,27 @@ export default function Signup({ navigation }) {
             ></FontAwesome>
           </View>
           <Text style={globalStyles.logoText}>Beskleta</Text>
-          <Text style={globalStyles.outlineText}>First Name</Text>
+          <Text style={globalStyles.outlineText}>User Name</Text>
           <TextInput
             style={globalStyles.textInput}
             placeholder="enter your username"
             id="userName"
+            onChangeText={userName => setUserName(userName)}
+            required
+          ></TextInput>
+          <Text style={globalStyles.outlineText}>First Name</Text>
+          <TextInput
+            style={globalStyles.textInput}
+            placeholder="enter your first name"
+            id="firstName"
             onChangeText={firstName => setFirstName(firstName)}
             required
           ></TextInput>
           <Text style={globalStyles.outlineText}>Last name</Text>
           <TextInput
             style={globalStyles.textInput}
-            placeholder="enter your username"
-            id="userName"
+            placeholder="enter your Last Name"
+            id="secondName"
             onChangeText={lastName => setLastName(lastName)}
             required
           ></TextInput>
@@ -216,55 +230,6 @@ export default function Signup({ navigation }) {
             />
           )}
 
-          {/* <DatePicker
-            style={{ width: 200, marginLeft: 20, marginTop: 15 }}
-            mode="datetime"
-            placeholder="select date"  <DatePicker
-            style={{ width: 200, marginLeft: 20, marginTop: 15 }}
-            mode="datetime"
-            placeholder="select date"
-            format="YYYY-MM-DD"
-            minDate="2002-05-01"
-            selected={state.birthDate}
-            //maxDate={new Date().getDate()}
-            confirmBtnText="Confirm"
-            cancelBtnText="Cancel"
-            customStyles={{
-              dateIcon: {
-                position: "absolute",
-                left: 0,
-                top: 4,
-                marginLeft: 0
-              },
-              dateInput: {
-                marginLeft: 36
-              }
-            }}
-            onDateChange={date => {
-              setDate(date);
-            }}
-          />
-            format="YYYY-MM-DD"
-            minDate="2002-05-01"
-            selected={state.birthDate}
-            //maxDate={new Date().getDate()}
-            confirmBtnText="Confirm"
-            cancelBtnText="Cancel"
-            customStyles={{
-              dateIcon: {
-                position: "absolute",
-                left: 0,
-                top: 4,
-                marginLeft: 0
-              },
-              dateInput: {
-                marginLeft: 36
-              }
-            }}
-            onDateChange={date => {
-              setDate(date);
-            }}
-          /> */}
           <TouchableOpacity
             style={{ alignItems: "center", justifyContent: "center" }}
             onPress={() => {
@@ -278,6 +243,7 @@ export default function Signup({ navigation }) {
               state.phoneNumber = phoneNumber;
               state.birthDate = dates;
               state.timestamp = dateobject.timestamp;
+              state.userName = userName;
 
               onClick(state, { navigation });
             }}

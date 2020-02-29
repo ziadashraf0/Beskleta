@@ -24,7 +24,10 @@ export function validateEmail(state) {
   var regex = /\S+@\S+\.\S+/;
   var regexname = /\S+/;
 
-  if (regex.test(state.email) == 0 || regexname.test(state.password) == 0) {
+  if (
+    regexname.test(state.userName) == 0 ||
+    regexname.test(state.password) == 0
+  ) {
     alert("validation error");
     return false;
   }
@@ -33,16 +36,17 @@ export function validateEmail(state) {
 }
 export async function onClick(state, { navigation }) {
   reqBody = {
-    email: "",
-    password: ""
+    //    email: "",
+    password: "",
+    userName: ""
   };
   if (validateEmail(state)) {
-    reqBody.email = state.email;
+    reqBody.userName = state.userName;
     reqBody.password = state.password;
     console.log(reqBody);
     try {
       await clientLogin(reqBody);
-      navigation.navigate("Drawer");
+      navigation.navigate("Drawer", { userName: state.userName });
     } catch (error) {
       if (error.response.status === 404) {
         alert("UserName or Password is Incorrect");
@@ -53,13 +57,15 @@ export async function onClick(state, { navigation }) {
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
+
   const [password, setPassword] = useState("");
   const [auth, setAuth] = useState("");
 
   const state = {
-    email: "",
     password: "",
-    auth: ""
+    auth: "",
+    userName: ""
   };
   return (
     <TouchableWithoutFeedback
@@ -77,11 +83,11 @@ export default function Login({ navigation }) {
             ></FontAwesome>
           </View>
           <Text style={globalStyles.logoText}>Beskleta</Text>
-          <Text style={globalStyles.outlineText}>email</Text>
+          <Text style={globalStyles.outlineText}>username</Text>
           <TextInput
             style={globalStyles.textInput}
-            placeholder="enter your email"
-            onChangeText={email => setEmail(email)}
+            placeholder="enter your username"
+            onChangeText={userName => setUserName(userName)}
           ></TextInput>
           <Text style={globalStyles.outlineText}>Password</Text>
           <TextInput
@@ -93,7 +99,7 @@ export default function Login({ navigation }) {
           <TouchableOpacity
             style={{ alignItems: "center", justifyContent: "center" }}
             onPress={() => {
-              state.email = email;
+              state.userName = userName;
               state.password = password;
               onClick(state, { navigation });
               console.log("hhhhhhhh" + auth);

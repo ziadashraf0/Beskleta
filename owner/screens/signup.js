@@ -27,6 +27,7 @@ export function validateEmail(state) {
     regexname.test(state.lastName) == 0 ||
     regexname.test(state.phoneNumber) == 0 ||
     regexname.test(state.password) == 0 ||
+    regexname.test(state.userName) == 0 ||
     regexname.test(state.SSN) == 0
   ) {
     alert("validation error");
@@ -45,7 +46,8 @@ export async function onClick(state) {
     email: "",
     SSN: "",
     phoneNumber: "",
-    birthDate: ""
+    birthDate: "",
+    userName: ""
   };
   if (validateEmail(state)) {
     reqBody.firstName = state.firstName;
@@ -55,6 +57,7 @@ export async function onClick(state) {
     reqBody.password = state.password;
     reqBody.SSN = state.SSN;
     reqBody.birthDate = state.birthDate;
+    reqBody.userName = state.userName;
     console.log(reqBody);
     try {
       await ownerRegister(reqBody);
@@ -69,6 +72,8 @@ export async function onClick(state) {
 
 export default function OwnerSignup() {
   const [firstName, setFirstName] = useState("");
+  const [userName, setUserName] = useState("");
+
   const [lastName, setLastName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
 
@@ -88,7 +93,8 @@ export default function OwnerSignup() {
     confirmPassword: "",
     SSN: "",
     phoneNumber: "",
-    birthDate: ""
+    birthDate: "",
+    userName: ""
   };
 
   return (
@@ -107,19 +113,27 @@ export default function OwnerSignup() {
             ></FontAwesome>
           </View>
           <Text style={globalStyles.logoText}>Beskleta</Text>
-          <Text style={globalStyles.outlineText}>First Name</Text>
+          <Text style={globalStyles.outlineText}>username</Text>
           <TextInput
             style={globalStyles.textInput}
             placeholder="enter your username"
             id="userName"
+            onChangeText={userName => setUserName(userName)}
+            required
+          ></TextInput>
+          <Text style={globalStyles.outlineText}>First Name</Text>
+          <TextInput
+            style={globalStyles.textInput}
+            placeholder="enter your first name"
+            id="firstName"
             onChangeText={firstName => setFirstName(firstName)}
             required
           ></TextInput>
           <Text style={globalStyles.outlineText}>Last name</Text>
           <TextInput
             style={globalStyles.textInput}
-            placeholder="enter your username"
-            id="userName"
+            placeholder="enter your last name"
+            id="lastName"
             onChangeText={lastName => setLastName(lastName)}
             required
           ></TextInput>
@@ -212,6 +226,7 @@ export default function OwnerSignup() {
               state.confirmPassword = confirmPassword;
               state.phoneNumber = phoneNumber;
               state.birthDate = dates;
+              state.userName = userName;
               onClick(state);
             }}
           >

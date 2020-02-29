@@ -22,7 +22,10 @@ export function validateEmail(state) {
   var regex = /\S+@\S+\.\S+/;
   var regexname = /\S+/;
 
-  if (regex.test(state.email) == 0 || regexname.test(state.password) == 0) {
+  if (
+    regexname.test(state.userName) == 0 ||
+    regexname.test(state.password) == 0
+  ) {
     alert("validation error");
     return false;
   }
@@ -32,15 +35,16 @@ export function validateEmail(state) {
 export async function onClick(state, { navigation }) {
   reqBody = {
     email: "",
-    password: ""
+    password: "",
+    userName: ""
   };
   if (validateEmail(state)) {
     reqBody.email = state.email;
     reqBody.password = state.password;
+    reqBody.userName = state.userName;
     console.log(reqBody);
     try {
       await ownerLogin(reqBody);
-      alert("authorized");
       navigation.navigate("Drawer");
     } catch (error) {
       if (error.response.status === 404) {
@@ -52,13 +56,16 @@ export async function onClick(state, { navigation }) {
 
 export default function OwnerLogin({ navigation }) {
   const [email, setEmail] = useState("");
+  const [userName, setUserName] = useState("");
+
   const [password, setPassword] = useState("");
   const [auth, setAuth] = useState("");
 
   const state = {
     email: "",
     password: "",
-    auth: ""
+    auth: "",
+    userName: ""
   };
   return (
     <TouchableWithoutFeedback
@@ -76,11 +83,11 @@ export default function OwnerLogin({ navigation }) {
             ></FontAwesome>
           </View>
           <Text style={globalStyles.logoText}>Beskleta</Text>
-          <Text style={globalStyles.outlineText}>email</Text>
+          <Text style={globalStyles.outlineText}>username</Text>
           <TextInput
             style={globalStyles.textInput}
-            placeholder="enter your email"
-            onChangeText={email => setEmail(email)}
+            placeholder="enter your username"
+            onChangeText={userName => setUserName(userName)}
           ></TextInput>
           <Text style={globalStyles.outlineText}>Password</Text>
           <TextInput
@@ -94,6 +101,7 @@ export default function OwnerLogin({ navigation }) {
             onPress={() => {
               state.email = email;
               state.password = password;
+              state.userName = userName;
               onClick(state, { navigation });
             }}
           >
