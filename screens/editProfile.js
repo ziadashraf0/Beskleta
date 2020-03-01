@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import DatePicker from "react-native-datepicker";
 import Modal from "react-native-modal";
+import { viewProfile, editEmail } from "../services/clientServices";
 export default class edit extends Component {
   constructor(props) {
     super(props);
@@ -21,13 +22,77 @@ export default class edit extends Component {
       modal04: false,
       modal05: false,
       modal06: false,
-      date: "2016-05-15",
-      Name: "From DB",
-      phoneNumb: "From DB",
-      Email: "From DB",
-      Password: "From DB",
-      BD: "From DB"
+      // birthDate: "",
+      // userName: "",
+      // phoneNumber: "",
+      // email: "",
+      // password: "",
+      SSN: 75756566957
     };
+  }
+  async viewProfile(z) {
+    reqBody = {
+      SSN: ""
+    };
+    reqBody = z;
+    try {
+      console.log("aa");
+      result = await viewProfile(reqBody);
+      console.log("aa2");
+      console.log(result);
+      this.state.name;
+    } catch (error) {
+      if (error.response.status == 404) {
+        alert("client was not found");
+      }
+    }
+  }
+  async viewProfile() {
+    reqBody = {
+      SSN: 56565665
+    };
+    try {
+      const result = await viewProfile(reqBody);
+      console.log(result);
+      this.setState({
+        userName: result["userName"],
+        password: "********",
+        email: result["email"],
+        phoneNumber: result["phoneNumber"],
+        birthDate: result["birthDate"].slice(0, 10)
+      });
+    } catch (error) {
+      if (error.response.status == 404) {
+        alert("client was not found");
+      } else if (error.response.status == 400) {
+        alert("bad req");
+      }
+    }
+  }
+  async editEmail() {
+    reqBody = {
+      SSN: 56565665
+    };
+    try {
+      const result = await editEmail();
+      console.log(result);
+      this.setState({
+        userName: result["userName"],
+        password: "********",
+        email: result["email"],
+        phoneNumber: result["phoneNumber"],
+        birthDate: result["birthDate"].slice(0, 10)
+      });
+    } catch (error) {
+      if (error.response.status == 404) {
+        alert("client was not found");
+      } else if (error.response.status == 400) {
+        alert("bad req");
+      }
+    }
+  }
+  async componentDidMount() {
+    this.viewProfile();
   }
   render() {
     return (
@@ -202,34 +267,34 @@ export default class edit extends Component {
         <TouchableOpacity onPress={() => this.setState({ modal01: true })}>
           <Text style={styles.text}>Name</Text>
           <Text style={{ color: "gray", marginLeft: 10 }}>
-            {this.state.Name}
+            {this.state.userName}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => this.setState({ modal02: true })}>
           <Text style={styles.text}>Mobile number</Text>
           <Text style={{ color: "gray", marginLeft: 10 }}>
-            {this.state.phoneNumb}
+            {this.state.phoneNumber}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => this.setState({ modal03: true })}>
           <Text style={styles.text}>Email</Text>
           <Text style={{ color: "gray", marginLeft: 10 }}>
             {" "}
-            {this.state.Email}
+            {this.state.email}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => this.setState({ modal04: true })}>
           <Text style={styles.text}>Password</Text>
           <Text style={{ color: "gray", marginLeft: 10 }}>
             {" "}
-            {this.state.Password}
+            {this.state.password}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => this.setState({ modal05: true })}>
           <Text style={styles.text}>Birth date</Text>
           <Text style={{ color: "gray", marginLeft: 10 }}>
             {" "}
-            {this.state.date}
+            {this.state.birthDate}
           </Text>
         </TouchableOpacity>
       </View>
