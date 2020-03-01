@@ -7,12 +7,57 @@ import {
 } from "react-native-responsive-screen";
 import { Entypo } from "@expo/vector-icons";
 import { FlatList } from "react-native-gesture-handler";
-
+import { FontAwesome } from "@expo/vector-icons";
+import { getStations } from "../services/stationServices";
 export default class Home extends React.Component {
-  state = {};
-  componentDidMount() {
-    this.findCoordinates();
+  state = {
+    stations: [
+      // {
+      //   key: 1,
+      //   coordinate: { latitude: 31.0381162, longitude: 30.4522963 },
+      //   title: "zoz"
+      // }
+    ]
+  };
+  fillStations(stations) {
+    console.log(stations);
+    var z = 0;
+    for (x in stations) {
+      this.setState({
+        stations: [
+          ...this.state.stations,
+          {
+            key: z + 1,
+            coordinate: {
+              latitude: parseFloat(
+                stations[z]["latitude"]["$numberDecimal"].replace(",", ".")
+              ),
+              longitude: parseFloat(
+                stations[z]["longitude"]["$numberDecimal"].replace(",", ".")
+              )
+            },
+            title: stations[z]["name"]
+          }
+        ]
+      });
+      z = z + 1;
+    }
   }
+  async componentDidMount() {
+    this.findCoordinates();
+    try {
+      const stations = await getStations();
+      console.log(stations[1]["longitude"]["$numberDecimal"]);
+      this.fillStations(stations);
+    } catch (error) {
+      if (error.response.status === 404) {
+        alert("UserName or Password is Incorrect");
+      }
+    }
+    this.getStations.bind();
+  }
+  async getStations() {}
+
   findCoordinates = () => {
     navigator.geolocation.getCurrentPosition(position => {
       const longitude = position.coords.longitude;
@@ -50,6 +95,21 @@ export default class Home extends React.Component {
     // const userName = this.props.navigation.getParam("userName");
     // console.log("PROPS " + userName);
     if (this.state.loaded == 1) {
+      const stationView = this.state.stations.map((stations, i) => {
+        return (
+          <View key={i}>
+            <MapView.Marker {...stations} key={i}>
+              <View>
+                <FontAwesome
+                  name="bicycle"
+                  color="black"
+                  size={50}
+                ></FontAwesome>
+              </View>
+            </MapView.Marker>
+          </View>
+        );
+      });
       return (
         <View style={styles.container}>
           <MapView
@@ -67,24 +127,18 @@ export default class Home extends React.Component {
             showsUserLocation={true}
             ref={ref => (this.map = ref)}
           >
-            <MapView.Marker
-              coordinate={{
-                latitude: this.state.latitude,
-                longitude: this.state.longitude
-              }}
-              title={"ورشة الزوز لتاجير العجل"}
-              description={"بسكلتات جميع الانواع"}
-            />
+            {stationView}
           </MapView>
           <View style={styles.locateMe}>
             <TouchableOpacity
               onPress={() =>
-                this.map.animateToRegion({
-                  latitude: this.state.latitude,
-                  longitude: this.state.longitude,
-                  latitudeDelta: 0.005,
-                  longitudeDelta: 0.005
-                })
+                // this.map.animateToRegion({
+                //   latitude: this.state.latitude,
+                //   longitude: this.state.longitude,
+                //   latitudeDelta: 0.005,
+                //   longitudeDelta: 0.005
+                // })
+                this.getStations.bind(this)
               }
             >
               <Entypo name="location" color="#16A2DA" size={40} />
