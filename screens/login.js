@@ -10,6 +10,7 @@ import {
   Icon,
   TouchableOpacity
 } from "react-native";
+import { connect } from "react-redux";
 import { globalStyles } from "../styles/globalStyles";
 import { FontAwesome } from "@expo/vector-icons";
 import { clientLogin } from "../services/clientServices";
@@ -55,7 +56,7 @@ export async function onClick(state, { navigation }) {
   }
 }
 
-export default function Login({ navigation }) {
+function Login({ navigation, client, setUserNameRedux }) {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
 
@@ -67,6 +68,7 @@ export default function Login({ navigation }) {
     auth: "",
     userName: ""
   };
+  // console.log(client);
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -101,6 +103,7 @@ export default function Login({ navigation }) {
             onPress={() => {
               state.userName = userName;
               state.password = password;
+              setUserNameRedux(userName);
               onClick(state, { navigation });
               console.log("hhhhhhhh" + auth);
             }}
@@ -117,7 +120,11 @@ export default function Login({ navigation }) {
             }}
           >
             <Text>you don't have an account ?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("Signup");
+              }}
+            >
               <Text style={{ color: "#16A2DA", marginLeft: wp("5") }}>
                 Create account
               </Text>
@@ -128,3 +135,16 @@ export default function Login({ navigation }) {
     </TouchableWithoutFeedback>
   );
 }
+const mapStateToProps = state => {
+  return {
+    client: state.client
+  };
+};
+const mapDispatchToState = dispatch => {
+  return {
+    setUserNameRedux: userName => {
+      dispatch({ type: "setUserName", userName: userName });
+    }
+  };
+};
+export default connect(mapStateToProps, mapDispatchToState)(Login);

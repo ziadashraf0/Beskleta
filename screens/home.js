@@ -9,15 +9,11 @@ import { Entypo } from "@expo/vector-icons";
 import { FlatList } from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
 import { getStations } from "../services/stationServices";
-export default class Home extends React.Component {
+import { connect } from "react-redux";
+
+class Home extends React.Component {
   state = {
-    stations: [
-      // {
-      //   key: 1,
-      //   coordinate: { latitude: 31.0381162, longitude: 30.4522963 },
-      //   title: "zoz"
-      // }
-    ]
+    stations: []
   };
   fillStations(stations) {
     console.log(stations);
@@ -94,7 +90,10 @@ export default class Home extends React.Component {
   render() {
     // const userName = this.props.navigation.getParam("userName");
     // console.log("PROPS " + userName);
+
     if (this.state.loaded == 1) {
+      const { client } = this.props;
+      console.log("--------------------------------", client.username);
       const stationView = this.state.stations.map((stations, i) => {
         return (
           <View key={i}>
@@ -175,3 +174,16 @@ const styles = StyleSheet.create({
     marginLeft: wp("70%")
   }
 });
+const mapStateToProps = state => {
+  return {
+    client: state.client
+  };
+};
+const mapDispatchToState = dispatch => {
+  return {
+    setUserNameRedux: userName => {
+      dispatch({ type: "setUserName", userName: userName });
+    }
+  };
+};
+export default connect(mapStateToProps)(Home);
