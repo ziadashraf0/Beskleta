@@ -1,5 +1,5 @@
 import React from "react";
-import { CreditCardInput } from "react-native-credit-card-input";
+
 import { StyleSheet, View } from "react-native";
 import {
   widthPercentageToDP as wp,
