@@ -61,25 +61,14 @@ export async function onClick(state, { navigation }) {
     reqBody.SSN = state.SSN;
     reqBody.birthDate = state.birthDate;
     reqBody.userName = state.userName;
-    const dateee = new Date(2002, 1, 1);
+    //const dateee = new Date(2002, 1, 1);
     console.log(reqBody);
-    if (dateee < new Date(state.timestamp)) {
-      try {
-        await emailCheck(reqBody);
-        navigation.navigate("DependentConfirmation");
-      } catch (error) {
-        if (error.response.status == 400) {
-          alert("already exists");
-        }
-      }
-    } else {
-      try {
-        await clientRegister(reqBody);
-        alert("Registerd!");
-      } catch (error) {
-        if (error.response.status === 400) {
-          alert("already exists");
-        }
+    try {
+      await clientRegister(reqBody);
+      alert("Registerd!");
+    } catch (error) {
+      if (error.response.status === 400) {
+        alert("already exists");
       }
     }
   }
