@@ -3,16 +3,13 @@ import http from "./httpService";
 import Axios from "axios";
 
 export function clientRegister(reqBody) {
-  return http.post(
-    "http://192.168.43.3:4000/client/signup",
-    stringify(reqBody)
-  );
+  return http.post("http://192.168.1.7:4000/client/signup", stringify(reqBody));
 }
 export async function clientLogin(reqBody) {
   console.log(reqBody);
 
   return await http.post(
-    "http://192.168.43.3:4000/client/login",
+    "http://192.168.1.7:4000/client/login",
     stringify(reqBody)
   );
 }
@@ -20,12 +17,12 @@ export async function emailCheck(reqBody) {
   console.log(reqBody);
 
   return await http.post(
-    "http://192.168.43.3:4000/client/emailCheck",
+    "http://192.168.1.7:4000/client/emailCheck",
     stringify(reqBody)
   );
 }
 export async function editEmail() {
-  let url = "http://192.168.43.3:4000/client/editEmail";
+  let url = "http://192.168.1.7:4000/client/editEmail";
   let options = {
     method: "PUT",
     url: url
@@ -38,7 +35,7 @@ export async function editEmail() {
   }
 }
 export async function editUserName() {
-  let url = "http://192.168.43.3:4000/client/editUserName";
+  let url = "http://192.168.1.7:4000/client/editUserName";
   let options = {
     method: "PUT",
     url: url
@@ -51,7 +48,7 @@ export async function editUserName() {
   }
 }
 export async function editBirthDate() {
-  let url = "http://192.168.43.3:4000/client/editBirthDate";
+  let url = "http://192.168.1.7:4000/client/editBirthDate";
   let options = {
     method: "PUT",
     url: url
@@ -64,7 +61,7 @@ export async function editBirthDate() {
   }
 }
 export async function editPassword() {
-  let url = "http://192.168.43.3:4000/client/editPassword";
+  let url = "http://192.168.1.7:4000/client/editPassword";
   let options = {
     method: "PUT",
     url: url
@@ -77,7 +74,7 @@ export async function editPassword() {
   }
 }
 export async function editPhoneNumber(reqBody) {
-  let url = "http://192.168.43.3:4000/client/editPhoneNumber";
+  let url = "http://192.168.1.7:4000/client/editPhoneNumber";
   let options = {
     method: "PUT",
     url: url,
@@ -91,9 +88,38 @@ export async function editPhoneNumber(reqBody) {
   }
 }
 export async function viewProfile(reqBody) {
-  let url = "http://192.168.43.3:4000/client/viewProfile";
+  let url = "http://192.168.1.7:4000/client/viewProfile";
   let options = {
     method: "POST",
+    url: url,
+    data: reqBody
+  };
+  let response = await Axios(options);
+
+  if (response) {
+    let info = await response.data;
+    return info;
+  }
+}
+export async function viewNotifications(reqBody) {
+  let url = "http://192.168.1.7:4000/client/viewNotifications";
+  let options = {
+    method: "POST",
+    url: url,
+    data: reqBody
+  };
+  let response = await Axios(options);
+
+  if (response) {
+    let info = await response.data;
+    return info;
+  }
+}
+
+export async function confirmingDependent(reqBody) {
+  let url = "http://192.168.1.7:4000/client/confirmingDependent";
+  let options = {
+    method: "PUt",
     url: url,
     data: reqBody
   };

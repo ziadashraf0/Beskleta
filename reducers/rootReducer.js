@@ -1,27 +1,25 @@
 const initState = {
-  client: { username: "aas" }
+  client: { username: "", email: "", SSN: "" }
 };
 const rootReducer = (state = initState, action) => {
   if (action.type == "setUserName") {
     state.client.username = action.userName;
-
-    //alert(state.client.username);
     return {
       ...state
     };
-    //client[0]["username"] = state.username;
   }
-  // if (action.type == "Delete") {
-  //   alert("hammo");
-
-  //   let newPosts = state.posts.filter(post => {
-  //     return action.id != post.id;
-  //   });
-
-  //   return {
-  //     ...state
-  //   };
-  // }
+  if (action.type == "setEmail") {
+    state.client.email = action.email;
+    return {
+      ...state
+    };
+  }
+  if (action.type == "setSSN") {
+    state.client.SSN = action.SSN;
+    return {
+      ...state
+    };
+  }
   return state;
 };
 

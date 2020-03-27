@@ -6,6 +6,8 @@ import Help from "./helpStack";
 import PromoCodes from "./promoCodesStack";
 import History from "./rideHistoryStack";
 import Home from "./homeStack";
+import Notification from "./notificationStack";
+
 const screens = {
   Home: {
     screen: Home
@@ -24,6 +26,9 @@ const screens = {
   },
   Help: {
     screen: Help
+  },
+  Notification: {
+    screen: Notification
   }
 };
 const rootDrawer = createDrawerNavigator(screens);
