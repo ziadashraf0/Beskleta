@@ -58,16 +58,13 @@ class Home extends React.Component {
     this.findCoordinates();
     try {
       const stations = await getStations();
-      console.log(stations[1]["longitude"]["$numberDecimal"]);
       this.fillStations(stations);
     } catch (error) {
       if (error.response.status === 404) {
         alert("UserName or Password is Incorrect");
       }
     }
-    this.getStations.bind();
   }
-  async getStations() {}
 
   findCoordinates = () => {
     navigator.geolocation.getCurrentPosition(position => {
