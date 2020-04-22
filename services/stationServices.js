@@ -1,6 +1,6 @@
 import Axios from "axios";
 export async function getStations() {
-  let url = "http://192.168.43.3:4000/station/stations";
+  let url = "https://beskletab.herokuapp.com/station/stations";
   let options = {
     method: "GET",
     url: url

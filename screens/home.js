@@ -1,23 +1,19 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import MapView from "react-native-maps";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
 import { Entypo } from "@expo/vector-icons";
-import { FlatList } from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
 import { getStations } from "../services/stationServices";
-export default class Home extends React.Component {
+import { connect } from "react-redux";
+import { viewProfile } from "../services/clientServices";
+
+class Home extends React.Component {
   state = {
-    stations: [
-      // {
-      //   key: 1,
-      //   coordinate: { latitude: 31.0381162, longitude: 30.4522963 },
-      //   title: "zoz"
-      // }
-    ]
+    stations: []
   };
   fillStations(stations) {
     console.log(stations);
@@ -44,6 +40,21 @@ export default class Home extends React.Component {
     }
   }
   async componentDidMount() {
+    try {
+      const { client } = this.props;
+      reqBody = { userName: client.username };
+      const clientProfile = await viewProfile(reqBody);
+      const { setEmailRedux, setSSN } = this.props;
+      this.setState({ email: clientProfile.email });
+      this.setState({ SSN: clientProfile.SSN });
+      setEmailRedux(this.state.email);
+      setSSN(this.state.SSN);
+      console.log(client);
+    } catch (error) {
+      if (error.response.status === 404) {
+        alert("UserName or Password is Incorrect");
+      }
+    }
     this.findCoordinates();
     try {
       const stations = await getStations();
@@ -91,7 +102,12 @@ export default class Home extends React.Component {
   render() {
     // const userName = this.props.navigation.getParam("userName");
     // console.log("PROPS " + userName);
+
     if (this.state.loaded == 1) {
+      const { client } = this.props;
+      console.log("--------------------------------", client.username);
+      //setSSN();
+
       const stationView = this.state.stations.map((stations, i) => {
         return (
           <View key={i}>
@@ -172,3 +188,19 @@ const styles = StyleSheet.create({
     marginLeft: wp("70%")
   }
 });
+const mapStateToProps = state => {
+  return {
+    client: state.client
+  };
+};
+const mapDispatchToState = dispatch => {
+  return {
+    setEmailRedux: email => {
+      dispatch({ type: "setEmail", email: email });
+    },
+    setSSN: SSN => {
+      dispatch({ type: "setSSN", SSN: SSN });
+    }
+  };
+};
+export default connect(mapStateToProps, mapDispatchToState)(Home);

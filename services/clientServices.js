@@ -4,7 +4,7 @@ import Axios from "axios";
 
 export function clientRegister(reqBody) {
   return http.post(
-    "http://192.168.43.3:4000/client/signup",
+    "https://beskletab.herokuapp.com/client/signup",
     stringify(reqBody)
   );
 }
@@ -12,7 +12,7 @@ export async function clientLogin(reqBody) {
   console.log(reqBody);
 
   return await http.post(
-    "http://192.168.43.3:4000/client/login",
+    "https://beskletab.herokuapp.com/client/login",
     stringify(reqBody)
   );
 }
@@ -20,12 +20,12 @@ export async function emailCheck(reqBody) {
   console.log(reqBody);
 
   return await http.post(
-    "http://192.168.43.3:4000/client/emailCheck",
+    "https://beskletab.herokuapp.com/client/emailCheck",
     stringify(reqBody)
   );
 }
 export async function editEmail() {
-  let url = "http://192.168.43.3:4000/client/editEmail";
+  let url = "https://beskletab.herokuapp.com/client/editEmail";
   let options = {
     method: "PUT",
     url: url
@@ -38,7 +38,7 @@ export async function editEmail() {
   }
 }
 export async function editUserName() {
-  let url = "http://192.168.43.3:4000/client/editUserName";
+  let url = "https://beskletab.herokuapp.com/client/editUserName";
   let options = {
     method: "PUT",
     url: url
@@ -51,7 +51,7 @@ export async function editUserName() {
   }
 }
 export async function editBirthDate() {
-  let url = "http://192.168.43.3:4000/client/editBirthDate";
+  let url = "https://beskletab.herokuapp.com/client/editBirthDate";
   let options = {
     method: "PUT",
     url: url
@@ -64,7 +64,7 @@ export async function editBirthDate() {
   }
 }
 export async function editPassword() {
-  let url = "http://192.168.43.3:4000/client/editPassword";
+  let url = "https://beskletab.herokuapp.com/client/editPassword";
   let options = {
     method: "PUT",
     url: url
@@ -77,7 +77,7 @@ export async function editPassword() {
   }
 }
 export async function editPhoneNumber(reqBody) {
-  let url = "http://192.168.43.3:4000/client/editPhoneNumber";
+  let url = "https://beskletab.herokuapp.com/client/editPhoneNumber";
   let options = {
     method: "PUT",
     url: url,
@@ -91,9 +91,39 @@ export async function editPhoneNumber(reqBody) {
   }
 }
 export async function viewProfile(reqBody) {
-  let url = "http://192.168.43.3:4000/client/viewProfile";
+  let url = "https://beskletab.herokuapp.com/client/viewProfile";
   let options = {
     method: "POST",
+    url: url,
+    data: reqBody
+  };
+  let response = await Axios(options);
+
+  if (response) {
+    let info = await response.data;
+    return info;
+  }
+}
+export async function viewNotifications(reqBody) {
+  let url = "https://beskletab.herokuapp.com/client/viewNotifications";
+  let options = {
+    method: "POST",
+    url: url,
+    data: reqBody
+  };
+  let response = await Axios(options);
+
+  if (response) {
+    let info = await response.data;
+    return info;
+  }
+}
+
+export async function confirmingDependent(reqBody) {
+  alert("hammo");
+  let url = "https://beskletab.herokuapp.com/client/confirmingDependent";
+  let options = {
+    method: "PUT",
     url: url,
     data: reqBody
   };
