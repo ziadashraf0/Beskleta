@@ -35,13 +35,17 @@ export default class Example extends Component {
   }
   async activateAccount() {
     reqBody = {
-      cardValidityDate: "2023-03",
+      cardValidityDate: "",
       cardVerificationCode: "",
       cardNumber: "",
-      SSN: "16446"
+      SSN: "1234567"
     };
     try {
-      reqBody.cardValidityDate = this.state.cardValidityDate;
+      var str = this.state.cardValidityDate;
+
+      var start = str.substring(0, 2);
+      var end = str.substring(3, 4);
+      reqBody.cardValidityDate = start + "20" + end;
       reqBody.cardVerificationCode = this.state.cardVerificationCode;
       reqBody.cardNumber = this.state.cardNumber;
       reqBody.SSN = this.state.SSN;
@@ -57,17 +61,6 @@ export default class Example extends Component {
       }
     }
   }
-
-  _onChange = formData => {
-    /* eslint no-console: 0 */
-    var body = formData;
-
-    this.setState({ cardVerificationCode: body.values.cvc });
-    this.setState({ cardValidityDate: body.values.expiry });
-    this.setState({ cardNumber: body.values.number });
-    console.log(this.state);
-    // console.log(JSON.stringify(formData, null, " ").values);
-  };
 
   _onFocus = field => {
     /* eslint no-console: 0 */
