@@ -151,7 +151,7 @@ class Home extends React.Component {
                 //   latitudeDelta: 0.005,
                 //   longitudeDelta: 0.005
                 // })
-                this.getStations.bind(this)
+                this.gotToMyLocation()
               }
             >
               <Entypo name="location" color="#16A2DA" size={40} />
