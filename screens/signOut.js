@@ -1,10 +1,14 @@
-import React, { Component } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import Navigation from "../routes/ClientOwnerStack";
-
-class SignOut extends Component {
+import React, { useState } from "react";
+import { Text, View } from "react-native";
+import CodePush from "react-native-code-push";
+import { NativeModules } from "react-native";
+class SignOut extends React.Component {
+  componentDidMount() {
+    NativeModules.DevSettings.reload();
+  }
   render() {
-    return <Navigation></Navigation>;
+    return <Text>GoodByeee......</Text>;
   }
 }
+
 export default SignOut;

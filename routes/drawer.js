@@ -7,7 +7,7 @@ import PromoCodes from "./promoCodesStack";
 import History from "./rideHistoryStack";
 import Home from "./homeStack";
 import Notification from "./notificationStack";
-
+import SignOut from "../screens/signOut";
 const screens = {
   Home: {
     screen: Home
@@ -29,6 +29,9 @@ const screens = {
   },
   Notification: {
     screen: Notification
+  },
+  SignOut: {
+    screen: SignOut
   }
 };
 const rootDrawer = createDrawerNavigator(screens);
