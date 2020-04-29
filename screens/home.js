@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
 import MapView from "react-native-maps";
 import {
   widthPercentageToDP as wp,
@@ -102,7 +102,7 @@ class Home extends React.Component {
   render() {
     // const userName = this.props.navigation.getParam("userName");
     // console.log("PROPS " + userName);
-
+    const { navigation } = this.props;
     if (this.state.loaded == 1) {
       const { client } = this.props;
       console.log("--------------------------------", client.username);
@@ -143,17 +143,13 @@ class Home extends React.Component {
             {stationView}
           </MapView>
           <View style={styles.locateMe}>
-            <TouchableOpacity
-              onPress={() =>
-                // this.map.animateToRegion({
-                //   latitude: this.state.latitude,
-                //   longitude: this.state.longitude,
-                //   latitudeDelta: 0.005,
-                //   longitudeDelta: 0.005
-                // })
-                this.gotToMyLocation()
-              }
-            >
+            <View style={{ marginRight: 20 }}>
+              <Button
+                title="Request Ride"
+                onPress={() => navigation.navigate("Station")}
+              ></Button>
+            </View>
+            <TouchableOpacity onPress={() => this.gotToMyLocation()}>
               <Entypo name="location" color="#16A2DA" size={40} />
             </TouchableOpacity>
           </View>
@@ -183,6 +179,7 @@ const styles = StyleSheet.create({
   locateMe: {
     position: "relative",
     alignItems: "flex-end",
+    flexDirection: "row",
     justifyContent: "flex-end",
     marginTop: hp("87%"),
     marginLeft: wp("70%")

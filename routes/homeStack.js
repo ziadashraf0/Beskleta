@@ -2,7 +2,8 @@ import Home from "../screens/home";
 import Header from "../shared/header";
 import { createStackNavigator } from "react-navigation-stack";
 import React from "react";
-
+import Station from "../screens/stations";
+import Bike from "../screens/bikes";
 const screens = {
   Home: {
     screen: Home,
@@ -13,6 +14,12 @@ const screens = {
         )
       };
     }
+  },
+  Station: {
+    screen: Station
+  },
+  Bike: {
+    screen: Bike
   }
 };
 const homeStack = createStackNavigator(screens, {
