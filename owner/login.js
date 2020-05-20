@@ -10,14 +10,17 @@ import {
   Icon,
   TouchableOpacity
 } from "react-native";
-import { globalStyles } from "../../styles/globalStyles";
+import { connect } from "react-redux";
+import { globalStyles } from "../styles/globalStyles";
 import { FontAwesome } from "@expo/vector-icons";
-import { ownerLogin } from "../../services/ownerServices";
+import { ownerLogin } from "../services/ownerServices";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
+import Drawer from "../routes/drawer";
+import Home from "../screens/home";
 export function validateEmail(state) {
   var regex = /\S+@\S+\.\S+/;
   var regexname = /\S+/;
@@ -34,27 +37,26 @@ export function validateEmail(state) {
 }
 export async function onClick(state, { navigation }) {
   reqBody = {
-    email: "",
+    //    email: "",
     password: "",
     userName: ""
   };
   if (validateEmail(state)) {
-    reqBody.email = state.email;
-    reqBody.password = state.password;
     reqBody.userName = state.userName;
+    reqBody.password = state.password;
     console.log(reqBody);
     try {
       await ownerLogin(reqBody);
-      navigation.navigate("Drawer");
+      navigation.navigate("ownerDrawer", { userName: state.userName });
     } catch (error) {
       if (error.response.status === 404) {
-        alert("email or Password is Incorrect");
+        alert("UserName or Password is Incorrect");
       }
     }
   }
 }
 
-export default function OwnerLogin({ navigation }) {
+function Login({ navigation, client, setUserNameRedux }) {
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
 
@@ -62,11 +64,11 @@ export default function OwnerLogin({ navigation }) {
   const [auth, setAuth] = useState("");
 
   const state = {
-    email: "",
     password: "",
     auth: "",
     userName: ""
   };
+  // console.log(client);
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -99,10 +101,11 @@ export default function OwnerLogin({ navigation }) {
           <TouchableOpacity
             style={{ alignItems: "center", justifyContent: "center" }}
             onPress={() => {
-              state.email = email;
-              state.password = password;
               state.userName = userName;
+              state.password = password;
+              setUserNameRedux(userName);
               onClick(state, { navigation });
+              console.log("hhhhhhhh" + auth);
             }}
           >
             <View style={globalStyles.button}>
@@ -118,7 +121,9 @@ export default function OwnerLogin({ navigation }) {
           >
             <Text>you don't have an account ?</Text>
             <TouchableOpacity
-              onPress={() => navigation.navigate("OwnerSignup")}
+              onPress={() => {
+                navigation.navigate("OwnerSignup");
+              }}
             >
               <Text style={{ color: "#16A2DA", marginLeft: wp("5") }}>
                 Create account
@@ -130,3 +135,16 @@ export default function OwnerLogin({ navigation }) {
     </TouchableWithoutFeedback>
   );
 }
+const mapStateToProps = state => {
+  return {
+    client: state.client
+  };
+};
+const mapDispatchToState = dispatch => {
+  return {
+    setUserNameRedux: userName => {
+      dispatch({ type: "setUserName", userName: userName });
+    }
+  };
+};
+export default connect(mapStateToProps, mapDispatchToState)(Login);

@@ -6,12 +6,14 @@ import {
   ScrollView,
   TouchableOpacity
 } from "react-native";
+import { render } from "react-dom";
 //import { FlatList } from "react-native-gesture-handler";
 
 export default function searchstation({ navigation }) {
-  const [searchstation] = useState([
-    { name: "station1", bike: " ", key: "1" },
-    { name: "station2", key: "2" }
+  //const { navigation } = this.props;
+  const [searchstation, setsearchstation] = useState([
+    { name: "station1", numberBikes: 5, numberRides: 10, key: "1" },
+    { name: "station2", numberBikes: 6, numberRides: 30, key: "2" }
   ]);
 
   return (
@@ -20,11 +22,14 @@ export default function searchstation({ navigation }) {
         {searchstation.map(item => {
           return (
             <View key={item.key}>
-              <Text style={styles.item}>{item.name}</Text>
-
               <TouchableOpacity
-                onPress={() => Navigation.navigate("searchbikes", item)}
-              ></TouchableOpacity>
+                onPress={() => {
+                  navigation.navigate("SearchBike", item);
+                  console.log("aaaaaaa");
+                }}
+              >
+                <Text style={styles.item}>{item.name}</Text>
+              </TouchableOpacity>
             </View>
           );
         })}

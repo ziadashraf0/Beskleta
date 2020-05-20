@@ -10,12 +10,15 @@ import {
   Icon,
   TouchableOpacity
 } from "react-native";
-import { globalStyles } from "../../styles/globalStyles";
+import { globalStyles } from "../styles/globalStyles";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { ScrollView } from "react-native-gesture-handler";
+import DatePicker from "react-native-datepicker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { ownerRegister } from "../../services/ownerServices";
+import { ownerRegister } from "../services/ownerServices";
+import { emailCheck } from "../services/clientServices";
+
 export function validateEmail(state) {
   var regex = /\S+@\S+\.\S+/;
   var regexname = /\S+/;
@@ -38,7 +41,7 @@ export function validateEmail(state) {
   }
   return true;
 }
-export async function onClick(state) {
+export async function onClick(state, { navigation }) {
   reqBody = {
     firstName: "",
     lastName: "",
@@ -58,6 +61,7 @@ export async function onClick(state) {
     reqBody.SSN = state.SSN;
     reqBody.birthDate = state.birthDate;
     reqBody.userName = state.userName;
+    //const dateee = new Date(2002, 1, 1);
     console.log(reqBody);
     try {
       await ownerRegister(reqBody);
@@ -70,7 +74,7 @@ export async function onClick(state) {
   }
 }
 
-export default function OwnerSignup() {
+export default function Signup({ navigation }) {
   const [firstName, setFirstName] = useState("");
   const [userName, setUserName] = useState("");
 
@@ -94,6 +98,7 @@ export default function OwnerSignup() {
     SSN: "",
     phoneNumber: "",
     birthDate: "",
+    timestamp: "",
     userName: ""
   };
 
@@ -113,7 +118,7 @@ export default function OwnerSignup() {
             ></FontAwesome>
           </View>
           <Text style={globalStyles.logoText}>Beskleta</Text>
-          <Text style={globalStyles.outlineText}>username</Text>
+          <Text style={globalStyles.outlineText}>User Name</Text>
           <TextInput
             style={globalStyles.textInput}
             placeholder="enter your username"
@@ -132,8 +137,8 @@ export default function OwnerSignup() {
           <Text style={globalStyles.outlineText}>Last name</Text>
           <TextInput
             style={globalStyles.textInput}
-            placeholder="enter your last name"
-            id="lastName"
+            placeholder="enter your Last Name"
+            id="secondName"
             onChangeText={lastName => setLastName(lastName)}
             required
           ></TextInput>
@@ -204,7 +209,6 @@ export default function OwnerSignup() {
             <DateTimePicker
               value={new Date()}
               mode={date}
-              maximumDate={new Date(2002, 1, 1)}
               is24Hour={true}
               display="default"
               onChange={date => {
@@ -214,6 +218,7 @@ export default function OwnerSignup() {
               }}
             />
           )}
+
           <TouchableOpacity
             style={{ alignItems: "center", justifyContent: "center" }}
             onPress={() => {
@@ -226,8 +231,10 @@ export default function OwnerSignup() {
               state.confirmPassword = confirmPassword;
               state.phoneNumber = phoneNumber;
               state.birthDate = dates;
+              state.timestamp = dateobject.timestamp;
               state.userName = userName;
-              onClick(state);
+
+              onClick(state, { navigation });
             }}
           >
             <View style={globalStyles.button}>

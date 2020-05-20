@@ -18,7 +18,7 @@ import {
   editPhoneNumber,
   editBirthDate,
   editPassword
-} from "../services/clientServices";
+} from "../services/ownerServices";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export function validateEmail(email) {
@@ -60,7 +60,7 @@ class edit extends React.Component {
     console.log("ahooooooo" + client.username);
     try {
       const result = await viewProfile(reqBody);
-
+      console.log("eeeeeeeeeeeeeeeeeeeeeeehhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
       this.setState({
         userName: result["userName"],
         password: "********",
@@ -186,11 +186,6 @@ class edit extends React.Component {
 
   async componentDidMount() {
     const { client } = this.props;
-    console.log(
-      "--------------------------------",
-
-      client.userName
-    );
     this.viewProfile();
   }
   render() {

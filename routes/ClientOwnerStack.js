@@ -6,9 +6,10 @@ import loginStack from "./loginStack";
 import Signup from "../screens/signup";
 import { createBottomTabNavigator } from "react-navigation-tabs";
 import Drawer from "./drawer";
-import OwnerSignup from "../owner/screens/signup";
-import OwnerLogin from "../owner/screens/login";
+import OwnerSignup from "../owner/signup";
+import OwnerLogin from "../owner/login";
 import DependentConfirmation from "../screens/dependentConfirmation";
+import ownerDrawer from "../ownerRoutes/drawer";
 
 const screens = {
   Separation: {
@@ -53,7 +54,8 @@ export default createAppContainer(
   createSwitchNavigator(
     {
       Separation: separation,
-      Drawer: Drawer
+      Drawer: Drawer,
+      ownerDrawer: ownerDrawer
     },
     {
       initialRouteName: "Separation"

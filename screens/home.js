@@ -146,7 +146,7 @@ class Home extends React.Component {
             <View style={{ marginRight: 20 }}>
               <Button
                 title="Request Ride"
-                onPress={() => navigation.navigate("Station")}
+                onPress={() => navigation.navigate("SearchStation")}
               ></Button>
             </View>
             <TouchableOpacity onPress={() => this.gotToMyLocation()}>

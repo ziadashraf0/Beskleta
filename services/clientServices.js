@@ -120,7 +120,7 @@ export async function viewNotifications(reqBody) {
 }
 
 export async function confirmingDependent(reqBody) {
-  alert("hammo");
+  console.log("waslna el middleware");
   let url = "https://beskletab.herokuapp.com/client/confirmingDependent";
   let options = {
     method: "PUT",
@@ -128,7 +128,7 @@ export async function confirmingDependent(reqBody) {
     data: reqBody
   };
   let response = await Axios(options);
-
+  console.log(response.data);
   if (response) {
     let info = await response.data;
     return info;

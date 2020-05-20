@@ -7,8 +7,7 @@ import {
 } from "react-native-responsive-screen";
 import { globalStyles } from "../styles/globalStyles";
 import { ScrollView, FlatList } from "react-native-gesture-handler";
-import { viewNotifications } from "../services/clientServices";
-import { confirmingDependent } from "../services/clientServices";
+import { viewNotifications } from "../services/ownerServices";
 class Notification extends React.Component {
   state = {
     Notifications: [],

@@ -2,8 +2,10 @@ import Home from "../screens/home";
 import Header from "../shared/header";
 import { createStackNavigator } from "react-navigation-stack";
 import React from "react";
-import Station from "../screens/stations";
-import Bike from "../screens/bikes";
+import SearchStation from "../screens/searchstation";
+import StationDetails from "../screens/stationdetails";
+import SearchBike from "../screens/searchbikes";
+
 const screens = {
   Home: {
     screen: Home,
@@ -15,11 +17,14 @@ const screens = {
       };
     }
   },
-  Station: {
-    screen: Station
+  SearchStation: {
+    screen: SearchStation
   },
-  Bike: {
-    screen: Bike
+  StationDetails: {
+    screen: StationDetails
+  },
+  SearchBike: {
+    screen: SearchBike
   }
 };
 const homeStack = createStackNavigator(screens, {
