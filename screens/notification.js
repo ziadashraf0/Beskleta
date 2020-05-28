@@ -8,9 +8,15 @@ import {
 import { globalStyles } from "../styles/globalStyles";
 import { ScrollView, FlatList } from "react-native-gesture-handler";
 import { viewNotifications } from "../services/clientServices";
+import { confirmingDependent } from "../services/clientServices";
+import { deleteNotification } from "../services/clientServices";
+
+import { AntDesign } from "@expo/vector-icons";
+
 class Notification extends React.Component {
   state = {
-    Notifications: []
+    Notifications: [],
+    show: true
   };
   async componentDidMount() {
     const { client } = this.props;
@@ -30,10 +36,31 @@ class Notification extends React.Component {
       this.setState({ Notifications: [...this.state.Notifications, Element] });
     });
   }
-  async confirmDependent(client) {}
+  async confirmDependent(client, item) {
+    try {
+      reqBody = { email: client.email, dependentEmail: item.dependentEmail };
+      const result = await confirmingDependent(reqBody);
+      alert("confirmed!");
+    } catch (error) {
+      if (error.response.status === 404) {
+        alert("error");
+      }
+    }
+  }
+  async deleteNoti(client, item) {
+    reqBody = { userName: client.username, notificationID: item._id };
+    try {
+      const result = await deleteNotification(reqBody);
+    } catch (error) {
+      if (error.response.status == 404) {
+        console.log(error.response);
+      }
+    }
+  }
 
   render() {
     const { navigation } = this.props;
+    const { client } = this.props;
     //return this.state.Notifications.map(item => {
     return (
       <FlatList
@@ -47,27 +74,48 @@ class Notification extends React.Component {
             }}
           >
             <ScrollView>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("NotificationDetails", item);
-                  console.log("aaaaaaa");
-                }}
-              >
-                <View style={styles.notific}>
-                  <Text style={styles.notificText}>{item.type}</Text>
-                  <Text style={styles.subText}>{item.message}</Text>
-                </View>
-              </TouchableOpacity>
-              {item.type == "Dependent Request" && (
+              {this.state.show && (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("NotificationDetails", item);
+                    console.log("aaaaaaa");
+                  }}
+                >
+                  <View style={styles.notific}>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={styles.notificText}>{item.type}</Text>
+                      <View style={{ marginLeft: 50, marginTop: 20 }}>
+                        <TouchableOpacity
+                          onPress={() => this.deleteNoti(client, item)}
+                        >
+                          <AntDesign
+                            name="delete"
+                            color="black"
+                            size={hp("5%")}
+                          ></AntDesign>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                    <Text style={styles.subText}>{item.message}</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+              {item.type == "Dependent Request" && this.state.show && (
                 <View style={styles.button}>
                   <View>
                     <Button
                       title="     yes      "
-                      onPress={() => alert("aaa")}
+                      onPress={() => this.confirmDependent(client, item)}
                     ></Button>
                   </View>
                   <View style={{ paddingLeft: wp("20%") }}>
-                    <Button title="           no         "></Button>
+                    <Button
+                      title="           no         "
+                      onPress={() => {
+                        console.log(item);
+                        //this.deleteNotification(client, item);
+                      }}
+                    ></Button>
                   </View>
                 </View>
               )}
@@ -86,8 +134,9 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     //marginTop: hp("1%"),
     marginBottom: hp("7%"),
-    backgroundColor: "black"
-    //borderColor: "#16A2DA",
+    backgroundColor: "#16A2DA",
+    borderColor: "#16A2DA",
+    borderWidth: 1
     // borderRadius: 50,
   },
   button: {
@@ -102,7 +151,7 @@ const styles = StyleSheet.create({
     fontFamily: "nunitoRegular",
     fontSize: hp("4%"),
     fontWeight: "bold",
-    color: "white"
+    color: "black"
   },
   subText: {
     marginTop: hp("4%"),
@@ -117,10 +166,21 @@ const mapStateToProps = state => {
   };
 };
 const mapDispatchToState = dispatch => {
-  return {
-    setUserNameRedux: userName => {
-      dispatch({ type: "setUserName", userName: userName });
-    }
-  };
+  return {};
 };
+
 export default connect(mapStateToProps)(Notification);
+// for (
+//   var i = 0;
+//   i < this.state.Notifications.length;
+//   i++
+// ) {
+//   if (
+//     this.state.Notifications[i].message == item.message
+//   ) {
+//     this.state.Notifications.splice(i, 1);
+//   }
+// }
+// this.setState({
+//   Notifications: this.state.Notifications
+// });

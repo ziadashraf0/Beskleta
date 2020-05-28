@@ -1,134 +1,92 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
-import MapView from "react-native-maps";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp
 } from "react-native-responsive-screen";
-import { Entypo } from "@expo/vector-icons";
-import { FlatList } from "react-native-gesture-handler";
+import { startRide } from "../services/clientServices";
+import { onClick } from "./login";
+import { TextInput } from "react-native-gesture-handler";
+import { globalStyles } from "../styles/globalStyles";
+import VirtualKeyboard from "react-native-virtual-keyboard";
 import { FontAwesome } from "@expo/vector-icons";
 
-export default class Home extends React.Component {
-  state = {
-    stations: [
-      {
-        key: 1,
-        coordinate: { latitude: 31.0381162, longitude: 30.4522963 },
-        title: "zoz"
-      },
-      {
-        key: 2,
-        coordinate: { latitude: 31.0351162, longitude: 30.4522963 },
-        title: "samar"
+export default class Test extends React.Component {
+  state = {};
+  async startRideHandler(state) {
+    reqBody = {
+      userName: "ziad",
+      PIN: state.PIN
+    };
+    try {
+      result = await startRide(reqBody);
+    } catch (error) {
+      if (error.response.status == 404) {
+        alert(error.response.data);
+      } else if (error.response.status == 400) {
+        alert(error.response.data);
       }
-    ]
-  };
-  componentDidMount() {
-    this.findCoordinates();
+    }
   }
-  findCoordinates = () => {
-    navigator.geolocation.getCurrentPosition(position => {
-      const longitude = position.coords.longitude;
-      const latitude = position.coords.latitude;
-      const loaded = 1;
-      this.setState({
-        longitude,
-        latitude,
-        loaded
-      });
-    });
-  };
-  gotToMyLocation() {
-    console.log("gotToMyLocation is called");
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        console.log("curent location: ", coords);
-        console.log(this.map);
-        if (this.map) {
-          console.log("curent location: ", coords);
-          this.map.animateToRegion({
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005
-          });
-        }
-      },
-      error => alert("Error: Are location services on?"),
-      { enableHighAccuracy: true }
-    );
-  }
-
   render() {
-    // const userName = this.props.navigation.getParam("userName");
-    // console.log("PROPS " + userName);
-    if (this.state.loaded == 1) {
-      const stationView = this.state.stations.map(markers => {
-        return (
-          <View>
-            <MapView.Marker {...markers}>
-              <View>
-                <FontAwesome
-                  name="bicycle"
-                  color="black"
-                  size={50}
-                ></FontAwesome>
-              </View>
-            </MapView.Marker>
-          </View>
-        );
-      });
-      return (
-        <View style={styles.container}>
-          <MapView
-            followsUserLocation={true}
-            showsPointsOfInterest={false}
-            showsCompass={false}
-            style={styles.mapStyle}
-            initialRegion={{
-              latitude: this.state.latitude,
-              longitude: this.state.longitude,
-              latitudeDelta: 0.01,
-              longitudeDelta: 0.01
-            }}
-            showsMyLocationButton={true}
-            showsUserLocation={true}
-            ref={ref => (this.map = ref)}
+    return (
+      <View style={styles.container}>
+        <View style={globalStyles.icon}>
+          <FontAwesome
+            name="bicycle"
+            color="#16A2DA"
+            size={hp("20%")}
+          ></FontAwesome>
+          <Text style={globalStyles.logoText}>Enjoy the Ride</Text>
+        </View>
+        <View style={styles.PIN}>
+          <TextInput
+            placeholder="enter the PIN"
+            keyboardType="numeric"
+            onChangeText={val => this.setState({ PIN: val })}
+          />
+        </View>
+        <View>
+          <TouchableOpacity
+            style={styles.PINHandler}
+            onPress={() => this.startRideHandler(this.state)}
           >
-            {stationView}
-          </MapView>
-          <View style={styles.locateMe}>
-            <TouchableOpacity
-              onPress={() =>
-                this.map.animateToRegion({
-                  latitude: this.state.latitude,
-                  longitude: this.state.longitude,
-                  latitudeDelta: 0.005,
-                  longitudeDelta: 0.005
-                })
-              }
-            >
-              <Entypo name="location" color="#16A2DA" size={40} />
-            </TouchableOpacity>
-          </View>
+            <View>
+              <Text style={{ color: "white", fontSize: 30 }}>start ride</Text>
+            </View>
+          </TouchableOpacity>
         </View>
-      );
-    } else
-      return (
-        <View style={styles.container}>
-          <Text>loading ...</Text>
-        </View>
-      );
+      </View>
+    );
   }
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
+  PINHandler: {
+    backgroundColor: "#16A2DA",
+    marginTop: hp("5%"),
     alignItems: "center",
     justifyContent: "center",
-    marginLeft: 5
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#16A2DA",
+    padding: hp("5%"),
+    width: wp("60%")
+  },
+  PIN: {
+    backgroundColor: "#eee",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: "#16A2DA",
+    padding: hp("5%"),
+    width: wp("100%"),
+    marginTop: hp("5%")
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
   },
   mapStyle: {
     width: wp("100%"),
