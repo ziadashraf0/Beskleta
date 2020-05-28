@@ -120,7 +120,6 @@ export async function viewNotifications(reqBody) {
 }
 
 export async function confirmingDependent(reqBody) {
-  console.log("waslna el middleware");
   let url = "https://beskletab.herokuapp.com/client/confirmingDependent";
   let options = {
     method: "PUT",
@@ -129,6 +128,48 @@ export async function confirmingDependent(reqBody) {
   };
   let response = await Axios(options);
   console.log(response.data);
+  if (response) {
+    let info = await response.data;
+    return info;
+  }
+}
+export async function startRide(reqBody) {
+  let url = "https://beskletab.herokuapp.com/client/startRide";
+  let options = {
+    method: "POST",
+    url: url,
+    data: reqBody
+  };
+  let response = await Axios(options);
+
+  if (response) {
+    let info = await response.data;
+    return info;
+  }
+}
+export async function deleteNotification(reqBody) {
+  let url = "https://beskletab.herokuapp.com/client/deleteNotification";
+  let options = {
+    method: "POST",
+    url: url,
+    data: reqBody
+  };
+  let response = await Axios(options);
+
+  if (response) {
+    let info = await response.data;
+    return info;
+  }
+}
+export async function rejectDependent(reqBody) {
+  let url = "https://beskletab.herokuapp.com/client/rejectDependentRequest";
+  let options = {
+    method: "PUT",
+    url: url,
+    data: reqBody
+  };
+  let response = await Axios(options);
+
   if (response) {
     let info = await response.data;
     return info;
