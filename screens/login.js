@@ -8,7 +8,7 @@ import {
   Keyboard,
   Button,
   Icon,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { connect } from "react-redux";
 import { globalStyles } from "../styles/globalStyles";
@@ -17,7 +17,7 @@ import { clientLogin } from "../services/clientServices";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Drawer from "../routes/drawer";
 import Home from "../screens/home";
@@ -39,7 +39,7 @@ export async function onClick(state, { navigation }) {
   reqBody = {
     //    email: "",
     password: "",
-    userName: ""
+    userName: "",
   };
   if (validateEmail(state)) {
     reqBody.userName = state.userName;
@@ -66,7 +66,7 @@ function Login({ navigation, client, setUserNameRedux }) {
   const state = {
     password: "",
     auth: "",
-    userName: ""
+    userName: "",
   };
   // console.log(client);
   return (
@@ -89,14 +89,14 @@ function Login({ navigation, client, setUserNameRedux }) {
           <TextInput
             style={globalStyles.textInput}
             placeholder="enter your username"
-            onChangeText={userName => setUserName(userName)}
+            onChangeText={(userName) => setUserName(userName)}
           ></TextInput>
           <Text style={globalStyles.outlineText}>Password</Text>
           <TextInput
             secureTextEntry={true}
             style={globalStyles.textInput}
             placeholder="enter your Password"
-            onChangeText={password => setPassword(password)}
+            onChangeText={(password) => setPassword(password)}
           ></TextInput>
           <TouchableOpacity
             style={{ alignItems: "center", justifyContent: "center" }}
@@ -116,7 +116,7 @@ function Login({ navigation, client, setUserNameRedux }) {
             style={{
               flexDirection: "row",
               marginTop: hp("4.7%"),
-              marginLeft: wp("5%")
+              marginLeft: wp("5%"),
             }}
           >
             <Text>you don't have an account ?</Text>
@@ -135,16 +135,16 @@ function Login({ navigation, client, setUserNameRedux }) {
     </TouchableWithoutFeedback>
   );
 }
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    client: state.client
+    client: state.client,
   };
 };
-const mapDispatchToState = dispatch => {
+const mapDispatchToState = (dispatch) => {
   return {
-    setUserNameRedux: userName => {
+    setUserNameRedux: (userName) => {
       dispatch({ type: "setUserName", userName: userName });
-    }
+    },
   };
 };
 export default connect(mapStateToProps, mapDispatchToState)(Login);

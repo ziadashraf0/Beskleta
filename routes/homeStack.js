@@ -4,7 +4,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import React from "react";
 import SearchStation from "../screens/searchstation";
 import StationDetails from "../screens/stationdetails";
-import SearchBike from "../screens/searchbikes";
+import SearchBikes from "../screens/searchbikes";
 
 const screens = {
   Home: {
@@ -13,26 +13,48 @@ const screens = {
       return {
         headerTitle: () => (
           <Header Navigation={navigation} title="Home "></Header>
-        )
+        ),
       };
-    }
+    },
   },
   SearchStation: {
-    screen: SearchStation
+    screen: SearchStation,
+    navigationOptions: ({ navigation }) => {
+      return {
+        headerTitle: () => (
+          <Header Navigation={navigation} title="SearchStation "></Header>
+        ),
+      };
+    },
   },
   StationDetails: {
-    screen: StationDetails
+    screen: StationDetails,
+    navigationOptions: ({ navigation }) => {
+      return {
+        headerTitle: () => (
+          <Header Navigation={navigation} title="StationDetails "></Header>
+        ),
+      };
+    },
   },
-  SearchBike: {
-    screen: SearchBike
-  }
+
+  SearchBikes: {
+    screen: SearchBikes,
+    navigationOptions: ({ navigation }) => {
+      return {
+        headerTitle: () => (
+          <Header Navigation={navigation} title="SearchBikes "></Header>
+        ),
+      };
+    },
+  },
 };
 const homeStack = createStackNavigator(screens, {
   defaultNavigationOptions: {
     headerTintColor: "white",
     headerStyle: {
-      backgroundColor: "#16A2DA"
-    }
-  }
+      backgroundColor: "#16A2DA",
+    },
+  },
 });
 export default homeStack;

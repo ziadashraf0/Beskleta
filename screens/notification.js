@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Button, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TouchableOpacity,
+  Alert
+} from "react-native";
 import { connect } from "react-redux";
 import {
   widthPercentageToDP as wp,
@@ -9,6 +16,11 @@ import { globalStyles } from "../styles/globalStyles";
 import { ScrollView, FlatList } from "react-native-gesture-handler";
 import { viewNotifications } from "../services/clientServices";
 import { confirmingDependent } from "../services/clientServices";
+import { deleteNotification } from "../services/clientServices";
+import { rejectDependent } from "../services/clientServices";
+
+import { AntDesign } from "@expo/vector-icons";
+
 class Notification extends React.Component {
   state = {
     Notifications: [],
@@ -33,14 +45,49 @@ class Notification extends React.Component {
     });
   }
   async confirmDependent(client, item) {
-    console.log(item.dependentEmail + "a" + client.email);
     try {
       reqBody = { email: client.email, dependentEmail: item.dependentEmail };
       const result = await confirmingDependent(reqBody);
-      alert("confirmed!");
     } catch (error) {
       if (error.response.status === 404) {
         alert("error");
+      }
+    }
+  }
+  async rejectDependent(item) {
+    try {
+      reqBody = { dependentEmail: item.dependentEmail };
+      const result = await rejectDependent(reqBody);
+      console.log("rejected");
+    } catch (error) {
+      if (error.response.status === 404) {
+        alert(error.response.data);
+      }
+    }
+  }
+  async deleteNoti(client, item) {
+    reqBody = { userName: client.username, notificationID: item._id };
+    try {
+      const result = await deleteNotification(reqBody);
+      Alert.alert(
+        "Alert",
+        "Deleted",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          },
+          {
+            text: "confirm",
+            onPress: () => console.log("OK Pressed")
+          }
+        ],
+        { cancelable: false }
+      );
+    } catch (error) {
+      if (error.response.status == 404) {
+        console.log(error.response);
       }
     }
   }
@@ -69,7 +116,29 @@ class Notification extends React.Component {
                   }}
                 >
                   <View style={styles.notific}>
-                    <Text style={styles.notificText}>{item.type}</Text>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={styles.notificText}>{item.type}</Text>
+                      <View
+                        style={{
+                          marginTop: hp("2%"),
+                          marginRight: wp("2%"),
+                          flex: 1,
+                          alignItems: "flex-end"
+                        }}
+                      >
+                        <TouchableOpacity
+                          onPress={() => {
+                            this.deleteNoti(client, item);
+                          }}
+                        >
+                          <AntDesign
+                            name="delete"
+                            color="black"
+                            size={hp("5%")}
+                          ></AntDesign>
+                        </TouchableOpacity>
+                      </View>
+                    </View>
                     <Text style={styles.subText}>{item.message}</Text>
                   </View>
                 </TouchableOpacity>
@@ -79,27 +148,49 @@ class Notification extends React.Component {
                   <View>
                     <Button
                       title="     yes      "
-                      onPress={() => this.confirmDependent(client, item)}
+                      onPress={() => {
+                        Alert.alert(
+                          "Alert",
+                          "by clicking confirm this client will be added to your dependents list",
+                          [
+                            {
+                              text: "Cancel",
+                              onPress: () => console.log("Cancel Pressed"),
+                              style: "cancel"
+                            },
+                            {
+                              text: "confirm",
+                              onPress: () => this.confirmDependent(client, item)
+                            }
+                          ],
+                          { cancelable: false }
+                        );
+                      }}
                     ></Button>
                   </View>
                   <View style={{ paddingLeft: wp("20%") }}>
                     <Button
                       title="           no         "
                       onPress={() => {
-                        for (
-                          var i = 0;
-                          i < this.state.Notifications.length;
-                          i++
-                        ) {
-                          if (
-                            this.state.Notifications[i].message == item.message
-                          ) {
-                            this.state.Notifications.splice(i, 1);
-                          }
-                        }
-                        this.setState({
-                          Notifications: this.state.Notifications
-                        });
+                        Alert.alert(
+                          "Alert",
+                          "by clicking confirm the notification will be deleted and the request will be rejected",
+                          [
+                            {
+                              text: "Cancel",
+                              onPress: () => console.log("Cancel Pressed"),
+                              style: "cancel"
+                            },
+                            {
+                              text: "confirm",
+                              onPress: () => console.log("OK Pressed")
+                            }
+                          ],
+                          { cancelable: false }
+                        );
+
+                        this.rejectDependent(item);
+                        this.deleteNoti(client, item);
                       }}
                     ></Button>
                   </View>
@@ -119,14 +210,15 @@ const styles = StyleSheet.create({
     height: hp("10%"),
     fontWeight: "bold",
     //marginTop: hp("1%"),
-    marginBottom: hp("7%"),
-    backgroundColor: "black"
-    //borderColor: "#16A2DA",
+    marginBottom: hp("10%"),
+    backgroundColor: "#16A2DA",
+    borderColor: "#16A2DA",
+    borderWidth: 1
     // borderRadius: 50,
   },
   button: {
     width: wp("50%"),
-    marginBottom: hp("2%"),
+    marginBottom: hp("1%"),
     marginLeft: hp("5%"),
     flexDirection: "row"
   },
@@ -134,9 +226,9 @@ const styles = StyleSheet.create({
     marginTop: hp("2%"),
     marginLeft: wp("5%"),
     fontFamily: "nunitoRegular",
-    fontSize: hp("4%"),
+    fontSize: hp("3%"),
     fontWeight: "bold",
-    color: "white"
+    color: "black"
   },
   subText: {
     marginTop: hp("4%"),
