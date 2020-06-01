@@ -1,54 +1,102 @@
-import React, { useState } from "react";
+import React, { Component } from "react";
 import {
   StyleSheet,
   View,
   Text,
   ScrollView,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList,
 } from "react-native";
-import { render } from "react-dom";
-//import { FlatList } from "react-native-gesture-handler";
 
-export default function searchstation({ navigation }) {
-  //const { navigation } = this.props;
-  const [searchstation, setsearchstation] = useState([
-    { name: "station1", numberBikes: 5, numberRides: 10, key: "1" },
-    { name: "station2", numberBikes: 6, numberRides: 30, key: "2" }
-  ]);
+import { FontAwesome } from "@expo/vector-icons";
+import { getStations } from "../services/stationServices";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+export default class searchstation extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { stations: [] };
+  }
 
-  return (
-    <View style={styles.container}>
-      <ScrollView>
-        {searchstation.map(item => {
-          return (
-            <View key={item.key}>
+  async componentDidMount() {
+    try {
+      const stations = await getStations();
+      var z = 0;
+      for (x in stations) {
+        this.setState({
+          stations: [
+            ...this.state.stations,
+            {
+              key: z + 1,
+
+              name: stations[z]["name"],
+            },
+          ],
+        });
+        z = z + 1;
+      }
+    } catch (error) {
+      console.log(error.message);
+      if (error.response.status == 404) {
+        alert("No stations found");
+      }
+    }
+  }
+  render() {
+    const { navigation } = this.props;
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={this.state.stations}
+          renderItem={({ item }) => (
+            <View>
               <TouchableOpacity
+                style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
+                iconLeft
+                transparent
+                primary
                 onPress={() => {
-                  navigation.navigate("SearchBike", item);
-                  console.log("aaaaaaa");
+                  navigation.push("StationDetails", item);
                 }}
               >
+                <View style={{ paddingLeft: 10 }}>
+                  <FontAwesome name="bicycle" size={hp("5%")}></FontAwesome>
+                </View>
                 <Text style={styles.item}>{item.name}</Text>
               </TouchableOpacity>
+
+              <View
+                style={{
+                  height: 1,
+                  width: "100%",
+                  backgroundColor: "#C0C0C0",
+                  alignItems: "flex-end",
+                  justifyContent: "flex-end",
+                  flex: 1,
+                  flexDirection: "column",
+                }}
+              ></View>
             </View>
-          );
-        })}
-      </ScrollView>
-    </View>
-  );
+          )}
+        />
+      </View>
+    );
+  }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
-    paddingTop: 40,
-    paddingHorizontal: 20
+    paddingTop: 4,
   },
   item: {
-    marginBottom: 24,
-    padding: 30,
-    backgroundColor: "#16A2DA",
-    fontSize: 24
+    marginTop: 2,
+    marginBottom: 2,
+    padding: 15,
+    fontSize: 30,
     // marginHorizontal:10,
-  }
+  },
 });

@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { startRide } from "../services/clientServices";
 import { onClick } from "./login";
@@ -10,13 +10,14 @@ import { TextInput } from "react-native-gesture-handler";
 import { globalStyles } from "../styles/globalStyles";
 import VirtualKeyboard from "react-native-virtual-keyboard";
 import { FontAwesome } from "@expo/vector-icons";
+import { connect } from "react-redux";
 
 export default class Test extends React.Component {
   state = {};
   async startRideHandler(state) {
     reqBody = {
       userName: "ziad",
-      PIN: state.PIN
+      PIN: state.PIN,
     };
     try {
       result = await startRide(reqBody);
@@ -43,7 +44,7 @@ export default class Test extends React.Component {
           <TextInput
             placeholder="enter the PIN"
             keyboardType="numeric"
-            onChangeText={val => this.setState({ PIN: val })}
+            onChangeText={(val) => this.setState({ PIN: val })}
           />
         </View>
         <View>
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#16A2DA",
     padding: hp("5%"),
-    width: wp("60%")
+    width: wp("60%"),
   },
   PIN: {
     backgroundColor: "#eee",
@@ -81,23 +82,23 @@ const styles = StyleSheet.create({
     borderColor: "#16A2DA",
     padding: hp("5%"),
     width: wp("100%"),
-    marginTop: hp("5%")
+    marginTop: hp("5%"),
   },
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   mapStyle: {
     width: wp("100%"),
     height: hp("80%"),
-    position: "absolute"
+    position: "absolute",
   },
   locateMe: {
     position: "relative",
     alignItems: "flex-end",
     justifyContent: "flex-end",
     marginTop: hp("87%"),
-    marginLeft: wp("70%")
-  }
+    marginLeft: wp("70%"),
+  },
 });

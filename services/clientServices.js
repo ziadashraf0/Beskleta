@@ -119,20 +119,7 @@ export async function viewNotifications(reqBody) {
   }
 }
 
-export async function confirmingDependent(reqBody) {
-  let url = "https://beskletab.herokuapp.com/client/confirmingDependent";
-  let options = {
-    method: "PUT",
-    url: url,
-    data: reqBody
-  };
-  let response = await Axios(options);
-  console.log(response.data);
-  if (response) {
-    let info = await response.data;
-    return info;
-  }
-}
+
 export async function startRide(reqBody) {
   let url = "https://beskletab.herokuapp.com/client/startRide";
   let options = {
@@ -163,6 +150,64 @@ export async function deleteNotification(reqBody) {
 }
 export async function rejectDependent(reqBody) {
   let url = "https://beskletab.herokuapp.com/client/rejectDependentRequest";
+  let options = {
+    method: "PUT",
+    url: url,
+    data: reqBody
+  };
+  let response = await Axios(options);
+
+  if (response) {
+    let info = await response.data;
+    return info;
+  }
+}
+export async function requestRide() {
+  console.log(reqBody);
+  let url = "https://beskletab.herokuapp.com/client/requestRide";
+  let options = {
+    method: "POST",
+    url: url,
+    data: reqBody
+  };
+  let response = await Axios(options);
+
+  if (response) {
+    let info = await response.data;
+    return info;
+  }
+}
+export async function activateAccount() {
+  let url = "https://beskletab.herokuapp.com/client/activateAccount";
+  let options = {
+    method: "PUT",
+    url: url,
+    data: reqBody
+  };
+  let response = await Axios(options);
+
+  if (response) {
+    let info = await response.data;
+    return info;
+  }
+}
+export async function confirmingDependent(reqBody) {
+  alert("hammo");
+  let url = "https://beskletab.herokuapp.com/client/confirmingDependent";
+  let options = {
+    method: "PUT",
+    url: url,
+    data: reqBody
+  };
+  let response = await Axios(options);
+
+  if (response) {
+    let info = await response.data;
+    return info;
+  }
+}
+export async function activateDependentAccount() {
+  let url = "https://beskletab.herokuapp.com/client/activateDependentAccount";
   let options = {
     method: "PUT",
     url: url,

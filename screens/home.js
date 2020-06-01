@@ -3,20 +3,19 @@ import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
 import MapView from "react-native-maps";
 import {
   widthPercentageToDP as wp,
-  heightPercentageToDP as hp
+  heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Entypo } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { getStations } from "../services/stationServices";
 import { connect } from "react-redux";
 import { viewProfile } from "../services/clientServices";
-
 class Home extends React.Component {
   state = {
-    stations: []
+    stations: [],
   };
   fillStations(stations) {
-    console.log(stations);
+    // console.log(stations);
     var z = 0;
     for (x in stations) {
       this.setState({
@@ -30,11 +29,11 @@ class Home extends React.Component {
               ),
               longitude: parseFloat(
                 stations[z]["longitude"]["$numberDecimal"].replace(",", ".")
-              )
+              ),
             },
-            title: stations[z]["name"]
-          }
-        ]
+            title: stations[z]["name"],
+          },
+        ],
       });
       z = z + 1;
     }
@@ -67,14 +66,14 @@ class Home extends React.Component {
   }
 
   findCoordinates = () => {
-    navigator.geolocation.getCurrentPosition(position => {
+    navigator.geolocation.getCurrentPosition((position) => {
       const longitude = position.coords.longitude;
       const latitude = position.coords.latitude;
       const loaded = 1;
       this.setState({
         longitude,
         latitude,
-        loaded
+        loaded,
       });
     });
   };
@@ -90,11 +89,11 @@ class Home extends React.Component {
             latitude: coords.latitude,
             longitude: coords.longitude,
             latitudeDelta: 0.005,
-            longitudeDelta: 0.005
+            longitudeDelta: 0.005,
           });
         }
       },
-      error => alert("Error: Are location services on?"),
+      (error) => alert("Error: Are location services on?"),
       { enableHighAccuracy: true }
     );
   }
@@ -103,6 +102,7 @@ class Home extends React.Component {
     // const userName = this.props.navigation.getParam("userName");
     // console.log("PROPS " + userName);
     const { navigation } = this.props;
+
     if (this.state.loaded == 1) {
       const { client } = this.props;
       console.log("--------------------------------", client.username);
@@ -125,6 +125,10 @@ class Home extends React.Component {
       });
       return (
         <View style={styles.container}>
+          <Button
+            title="Go to stations"
+            onPress={() => navigation.push("SearchStation")}
+          />
           <MapView
             followsUserLocation={true}
             showsPointsOfInterest={false}
@@ -134,22 +138,28 @@ class Home extends React.Component {
               latitude: this.state.latitude,
               longitude: this.state.longitude,
               latitudeDelta: 0.01,
-              longitudeDelta: 0.01
+              longitudeDelta: 0.01,
             }}
             showsMyLocationButton={true}
             showsUserLocation={true}
-            ref={ref => (this.map = ref)}
+            ref={(ref) => (this.map = ref)}
           >
             {stationView}
           </MapView>
           <View style={styles.locateMe}>
-            <View style={{ marginRight: 20 }}>
-              <Button
-                title="Request Ride"
-                onPress={() => navigation.navigate("SearchStation")}
-              ></Button>
-            </View>
-            <TouchableOpacity onPress={() => this.gotToMyLocation()}>
+            <TouchableOpacity
+              onPress={
+                () => {
+                  this.gotToMyLocation();
+                }
+                // this.map.animateToRegion({
+                //   latitude: this.state.latitude,
+                //   longitude: this.state.longitude,
+                //   latitudeDelta: 0.005,
+                //   longitudeDelta: 0.005
+                // })
+              }
+            >
               <Entypo name="location" color="#16A2DA" size={40} />
             </TouchableOpacity>
           </View>
@@ -169,35 +179,39 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    marginLeft: 5
+    marginLeft: 5,
   },
   mapStyle: {
     width: wp("100%"),
     height: hp("80%"),
-    position: "absolute"
+    position: "absolute",
   },
   locateMe: {
     position: "relative",
     alignItems: "flex-end",
-    flexDirection: "row",
     justifyContent: "flex-end",
     marginTop: hp("87%"),
-    marginLeft: wp("70%")
-  }
+    marginLeft: wp("70%"),
+  },
+  Button: {
+    flex: 1,
+    marginTop: hp("100%"),
+    marginLeft: wp("30%"),
+  },
 });
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return {
-    client: state.client
+    client: state.client,
   };
 };
-const mapDispatchToState = dispatch => {
+const mapDispatchToState = (dispatch) => {
   return {
-    setEmailRedux: email => {
+    setEmailRedux: (email) => {
       dispatch({ type: "setEmail", email: email });
     },
-    setSSN: SSN => {
+    setSSN: (SSN) => {
       dispatch({ type: "setSSN", SSN: SSN });
-    }
+    },
   };
 };
 export default connect(mapStateToProps, mapDispatchToState)(Home);
