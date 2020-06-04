@@ -5,7 +5,8 @@ import React from "react";
 import SearchStation from "../screens/searchstation";
 import StationDetails from "../screens/stationdetails";
 import SearchBikes from "../screens/searchbikes";
-
+import SelectDestination from "../screens/selectdestination";
+import StartRide from "../screens/startRide";
 const screens = {
   Home: {
     screen: Home,
@@ -44,6 +45,26 @@ const screens = {
       return {
         headerTitle: () => (
           <Header Navigation={navigation} title="SearchBikes "></Header>
+        ),
+      };
+    },
+  },
+  SelectDestination: {
+    screen: SelectDestination,
+    navigationOptions: ({ navigation }) => {
+      return {
+        headerTitle: () => (
+          <Header Navigation={navigation} title="SelectDestination "></Header>
+        ),
+      };
+    },
+  },
+  StartRide: {
+    screen: StartRide,
+    navigationOptions: ({ navigation }) => {
+      return {
+        headerTitle: () => (
+          <Header Navigation={navigation} title="StartRide "></Header>
         ),
       };
     },

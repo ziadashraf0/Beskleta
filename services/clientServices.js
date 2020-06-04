@@ -28,7 +28,7 @@ export async function editEmail() {
   let url = "https://beskletab.herokuapp.com/client/editEmail";
   let options = {
     method: "PUT",
-    url: url
+    url: url,
   };
   let response = await Axios(options);
 
@@ -41,7 +41,7 @@ export async function editUserName() {
   let url = "https://beskletab.herokuapp.com/client/editUserName";
   let options = {
     method: "PUT",
-    url: url
+    url: url,
   };
   let response = await Axios(options);
 
@@ -54,7 +54,7 @@ export async function editBirthDate() {
   let url = "https://beskletab.herokuapp.com/client/editBirthDate";
   let options = {
     method: "PUT",
-    url: url
+    url: url,
   };
   let response = await Axios(options);
 
@@ -67,7 +67,7 @@ export async function editPassword() {
   let url = "https://beskletab.herokuapp.com/client/editPassword";
   let options = {
     method: "PUT",
-    url: url
+    url: url,
   };
   let response = await Axios(options);
 
@@ -81,7 +81,7 @@ export async function editPhoneNumber(reqBody) {
   let options = {
     method: "PUT",
     url: url,
-    data: reqBody
+    data: reqBody,
   };
   let response = await Axios(options);
 
@@ -95,7 +95,7 @@ export async function viewProfile(reqBody) {
   let options = {
     method: "POST",
     url: url,
-    data: reqBody
+    data: reqBody,
   };
   let response = await Axios(options);
 
@@ -109,7 +109,7 @@ export async function viewNotifications(reqBody) {
   let options = {
     method: "POST",
     url: url,
-    data: reqBody
+    data: reqBody,
   };
   let response = await Axios(options);
 
@@ -119,13 +119,12 @@ export async function viewNotifications(reqBody) {
   }
 }
 
-
 export async function startRide(reqBody) {
   let url = "https://beskletab.herokuapp.com/client/startRide";
   let options = {
     method: "POST",
     url: url,
-    data: reqBody
+    data: reqBody,
   };
   let response = await Axios(options);
 
@@ -139,7 +138,7 @@ export async function deleteNotification(reqBody) {
   let options = {
     method: "POST",
     url: url,
-    data: reqBody
+    data: reqBody,
   };
   let response = await Axios(options);
 
@@ -153,7 +152,7 @@ export async function rejectDependent(reqBody) {
   let options = {
     method: "PUT",
     url: url,
-    data: reqBody
+    data: reqBody,
   };
   let response = await Axios(options);
 
@@ -168,7 +167,7 @@ export async function requestRide() {
   let options = {
     method: "POST",
     url: url,
-    data: reqBody
+    data: reqBody,
   };
   let response = await Axios(options);
 
@@ -182,7 +181,7 @@ export async function activateAccount() {
   let options = {
     method: "PUT",
     url: url,
-    data: reqBody
+    data: reqBody,
   };
   let response = await Axios(options);
 
@@ -197,7 +196,7 @@ export async function confirmingDependent(reqBody) {
   let options = {
     method: "PUT",
     url: url,
-    data: reqBody
+    data: reqBody,
   };
   let response = await Axios(options);
 
@@ -211,7 +210,21 @@ export async function activateDependentAccount() {
   let options = {
     method: "PUT",
     url: url,
-    data: reqBody
+    data: reqBody,
+  };
+  let response = await Axios(options);
+
+  if (response) {
+    let info = await response.data;
+    return info;
+  }
+}
+export async function viewRides() {
+  let url = "https://beskletab.herokuapp.com/client/viewRides";
+  let options = {
+    method: "POST",
+    url: url,
+    data: reqBody,
   };
   let response = await Axios(options);
 

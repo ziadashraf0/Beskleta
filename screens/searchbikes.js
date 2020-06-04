@@ -5,95 +5,67 @@ import {
   Text,
   ScrollView,
   TouchableHighlight,
-  TouchableOpacity,
   Button,
 } from "react-native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
-import { TextInput } from "react-native-gesture-handler";
-import { globalStyles } from "../styles/globalStyles";
 import { requestRide } from "../services/clientServices";
-import { FontAwesome } from "@expo/vector-icons";
-
 import { connect } from "react-redux";
-class SearchBikes extends React.Component {
-  state = {};
-  async startRideHandler(state) {
+
+class searchbikes extends React.Component {
+  async requestRide() {
+    const { client } = this.props;
+    const { navigation } = this.props;
+
     reqBody = {
-      userName: "ziad",
-      PIN: state.PIN,
+      SSN: "",
+      userName: "",
+      stationName: "",
+      bikeID: "",
     };
+
     try {
-      result = await startRide(reqBody);
+      reqBody.SSN = client.SSN;
+      reqBody.userName = client.username;
+      reqBody.stationName = navigation.getParam("stationName");
+      reqBody.bikeID = navigation.getParam("key").toString();
+
+      const result = await requestRide();
+      navigation.push("SelectDestination");
     } catch (error) {
+      console.log(error.message);
       if (error.response.status == 404) {
-        alert(error.response.data);
+        alert(
+          "Bike was not found or It was found NOT AVAILABLE at the moment "
+        );
       } else if (error.response.status == 400) {
-        alert(error.response.data);
+        alert("Client was not found or is NOT AVAILABLE");
       }
     }
   }
-
   render() {
     const { navigation } = this.props;
     return (
       <View
         style={{ marginTop: 2, marginBottom: 2, padding: 15, fontSize: 30 }}
       >
-        <View style={globalStyles.icon}>
-          <FontAwesome
-            name="bicycle"
-            color="#16A2DA"
-            size={hp("20%")}
-          ></FontAwesome>
-          <Text style={globalStyles.logoText}>Enjoy the Ride</Text>
-        </View>
-        <View style={styles.PIN}>
-          <TextInput
-            placeholder="enter the PIN"
-            keyboardType="numeric"
-            onChangeText={(val) => this.setState({ PIN: val })}
-          />
-        </View>
-        <View>
-          <TouchableOpacity
-            style={styles.PINHandler}
-            onPress={() => this.startRideHandler(this.state)}
-          >
-            <View>
-              <Text style={{ color: "white", fontSize: 30 }}>start ride</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        <Text>category: {navigation.getParam("category")}</Text>
+        <Text>colour: {navigation.getParam("color")}</Text>
+        <Text>size: {navigation.getParam("size")}</Text>
+        <Text>condition: {navigation.getParam("condition")}</Text>
+        <Text>rate: {navigation.getParam("rate")}</Text>
+        <TouchableHighlight
+          style={[styles.touchableHighlight, { backgroundColor: "#16A2DA" }]}
+          underlayColor={"#f1f1f1"}
+          onPress={() => {
+            this.requestRide();
+          }}
+        >
+          <Text style={styles.text}>Request Ride </Text>
+        </TouchableHighlight>
       </View>
     );
   }
 }
 const styles = StyleSheet.create({
-  PINHandler: {
-    backgroundColor: "#16A2DA",
-    marginTop: hp("5%"),
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: "#16A2DA",
-    padding: hp("5%"),
-    width: wp("60%"),
-  },
-  PIN: {
-    backgroundColor: "#eee",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: "#16A2DA",
-    padding: hp("5%"),
-    width: wp("100%"),
-    marginTop: hp("5%"),
-  },
   touchableHighlight: {
     backgroundColor: "#16A2DA",
     alignItems: "center",
@@ -121,4 +93,4 @@ const mapDispatchToState = (dispatch) => {
     },
   };
 };
-export default connect(mapStateToProps, mapDispatchToState)(SearchBikes);
+export default connect(mapStateToProps, mapDispatchToState)(searchbikes);

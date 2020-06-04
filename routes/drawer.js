@@ -4,35 +4,36 @@ import Edit from "./editProfileStack";
 import Payment from "./paymentStack";
 import Help from "./helpStack";
 import PromoCodes from "./promoCodesStack";
-import History from "./rideHistoryStack";
+//import History from "./rideHistoryStack";
 import Home from "./homeStack";
 import Notification from "./notificationStack";
+import RideHistory from "../screens/rideHistory";
 import SignOut from "../screens/signOut";
 const screens = {
   Home: {
-    screen: Home
+    screen: Home,
   },
   EditProfile: {
-    screen: Edit
+    screen: Edit,
   },
   Payment: {
-    screen: Payment
+    screen: Payment,
   },
   PromoCodes: {
-    screen: PromoCodes
+    screen: PromoCodes,
   },
-  History: {
-    screen: History
+  RideHistory: {
+    screen: RideHistory,
   },
   Help: {
-    screen: Help
+    screen: Help,
   },
   Notification: {
-    screen: Notification
+    screen: Notification,
   },
   SignOut: {
-    screen: SignOut
-  }
+    screen: SignOut,
+  },
 };
 const rootDrawer = createDrawerNavigator(screens);
 export default rootDrawer;

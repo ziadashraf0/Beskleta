@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 import { FontAwesome } from "@expo/vector-icons";
-import { getStations } from "../services/stationServices";
+import { getStations } from "../services/stationServices"; //import { FlatList } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

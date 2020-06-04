@@ -5,10 +5,8 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { startRide } from "../services/clientServices";
-import { onClick } from "./login";
 import { TextInput } from "react-native-gesture-handler";
 import { globalStyles } from "../styles/globalStyles";
-import VirtualKeyboard from "react-native-virtual-keyboard";
 import { FontAwesome } from "@expo/vector-icons";
 import { connect } from "react-redux";
 

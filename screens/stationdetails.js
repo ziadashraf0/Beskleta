@@ -5,7 +5,6 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  TouchableHighlightBase,
 } from "react-native";
 
 import { viewStationBikes } from "../services/stationServices";
@@ -14,11 +13,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-
-import { connect } from "react-redux";
-import { requestRide } from "../services/clientServices";
-
-class stationdetails extends React.Component {
+export default class stationdetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = { bikes: [] };
@@ -58,37 +53,7 @@ class stationdetails extends React.Component {
       }
     }
   }
-  async requestRide() {
-    const { client } = this.props;
-    const { navigation } = this.props;
 
-    reqBody = {
-      SSN: "",
-      userName: "",
-      stationName: "",
-      bikeID: "",
-    };
-
-    try {
-      reqBody.SSN = client.SSN;
-      reqBody.userName = client.username;
-      reqBody.stationName = navigation.getParam("stationName");
-      reqBody.bikeID = navigation.getParam("key").toString();
-
-      const result = await requestRide();
-
-      alert("Requesting Ride !");
-    } catch (error) {
-      console.log(error.message);
-      if (error.response.status == 404) {
-        alert(
-          "Bike was not found or It was found NOT AVAILABLE at the moment "
-        );
-      } else if (error.response.status == 400) {
-        alert("Client was not found or is NOT AVAILABLE");
-      }
-    }
-  }
   render() {
     const { navigation } = this.props;
     return (
@@ -101,8 +66,7 @@ class stationdetails extends React.Component {
                 style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
                 iconLeft
                 onPress={() => {
-                  this.requestRide();
-                  navigation.push("SearchBikes");
+                  navigation.push("SearchBikes", item);
                 }}
               >
                 <View
@@ -165,20 +129,3 @@ const styles = StyleSheet.create({
     // marginHorizontal:10,
   },
 });
-const mapStateToProps = (state) => {
-  return {
-    client: state.client,
-  };
-};
-const mapDispatchToState = (dispatch) => {
-  return {
-    setEmailRedux: (email) => {
-      dispatch({ type: "setEmail", email: email });
-    },
-
-    setUserName: (userName) => {
-      dispatch({ type: "setUserName", userName: userName });
-    },
-  };
-};
-export default connect(mapStateToProps, mapDispatchToState)(stationdetails);
